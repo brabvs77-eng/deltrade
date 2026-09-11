@@ -1,0 +1,140 @@
+[
+  {
+    "id": "sheet",
+    "name": "Лист",
+    "icon": "▭",
+    "fields": [
+      { "key": "t", "label": "Толщина t", "unit": "мм", "default": 3 },
+      { "key": "b", "label": "Ширина B", "unit": "мм", "default": 1000 },
+      { "key": "l", "label": "Длина L", "unit": "мм", "default": 2000 }
+    ]
+  },
+  {
+    "id": "plate",
+    "name": "Плита",
+    "icon": "▬",
+    "fields": [
+      { "key": "t", "label": "Толщина t", "unit": "мм", "default": 20 },
+      { "key": "b", "label": "Ширина B", "unit": "мм", "default": 1500 },
+      { "key": "l", "label": "Длина L", "unit": "мм", "default": 3000 }
+    ]
+  },
+  {
+    "id": "round",
+    "name": "Круг",
+    "icon": "●",
+    "fields": [
+      { "key": "d", "label": "Диаметр d", "unit": "мм", "default": 20 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "square",
+    "name": "Квадрат",
+    "icon": "■",
+    "fields": [
+      { "key": "a", "label": "Сторона a", "unit": "мм", "default": 20 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "hex",
+    "name": "Шестигранник",
+    "icon": "⬡",
+    "fields": [
+      { "key": "s", "label": "Размер S", "unit": "мм", "default": 19 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "strip",
+    "name": "Полоса / лента",
+    "icon": "▬",
+    "fields": [
+      { "key": "t", "label": "Толщина t", "unit": "мм", "default": 4 },
+      { "key": "b", "label": "Ширина B", "unit": "мм", "default": 40 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "pipe",
+    "name": "Труба",
+    "icon": "◎",
+    "fields": [
+      { "key": "d", "label": "Диаметр D", "unit": "мм", "default": 57 },
+      { "key": "s", "label": "Стенка S", "unit": "мм", "default": 3.5 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "pipe_rect",
+    "name": "Труба профильная",
+    "icon": "▢",
+    "fields": [
+      { "key": "a", "label": "Ширина A", "unit": "мм", "default": 60 },
+      { "key": "b", "label": "Высота B", "unit": "мм", "default": 60 },
+      { "key": "s", "label": "Стенка S", "unit": "мм", "default": 3 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "wire",
+    "name": "Проволока",
+    "icon": "〜",
+    "fields": [
+      { "key": "d", "label": "Диаметр d", "unit": "мм", "default": 2 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "angle",
+    "name": "Уголок",
+    "icon": "⌐",
+    "fields": [
+      { "key": "a", "label": "Полка A", "unit": "мм", "default": 50 },
+      { "key": "b", "label": "Полка B", "unit": "мм", "default": 50 },
+      { "key": "t", "label": "Толщина t", "unit": "мм", "default": 5 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "channel",
+    "name": "Швеллер",
+    "icon": "⊏",
+    "fields": [
+      { "key": "h", "label": "Высота H", "unit": "мм", "default": 100 },
+      { "key": "b", "label": "Полка B", "unit": "мм", "default": 46 },
+      { "key": "t", "label": "Толщина t", "unit": "мм", "default": 4.5 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "ibeam",
+    "name": "Двутавр",
+    "icon": "工",
+    "fields": [
+      { "key": "h", "label": "Высота H", "unit": "мм", "default": 200 },
+      { "key": "b", "label": "Полка B", "unit": "мм", "default": 100 },
+      { "key": "t", "label": "Толщина t", "unit": "мм", "default": 5.6 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "rebar",
+    "name": "Арматура",
+    "icon": "╱",
+    "fields": [
+      { "key": "d", "label": "Диаметр d", "unit": "мм", "default": 12 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "custom",
+    "name": "Пользовательский",
+    "icon": "⚙",
+    "fields": [
+      { "key": "area", "label": "Площадь сечения", "unit": "мм²", "default": 100 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  }
+]
