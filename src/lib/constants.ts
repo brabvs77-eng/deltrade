@@ -4,7 +4,7 @@ export const SITE = {
   title: 'DELDIN TRADE — комплексные поставки металлопроката',
   description:
     'Металлотрейдер и комплексный B2B-поставщик. Подберём продукцию по спецификации, найдём редкие позиции, организуем обработку и доставим на объект по России.',
-  url: 'https://deldin-trade.ru',
+  url: 'https://deltrade.pages.dev',
   phone: '+7 (495) 000-00-00',
   phoneHref: 'tel:+74950000000',
   email: 'info@deldin-trade.ru',
