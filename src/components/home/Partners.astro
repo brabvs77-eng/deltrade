@@ -11,12 +11,20 @@ import partners from '../../data/partners.json';
       align="center"
     />
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto">
       {
         partners.map((partner) => (
-          <div class="flex flex-col items-center justify-center p-4 sm:p-5 rounded-xl metal-border bg-surface text-center min-h-[80px]">
-            <span class="font-bold text-steel-800 text-sm sm:text-base">{partner.name}</span>
-            <span class="mt-1 text-xs text-steel-400">{partner.category}</span>
+          <div class="flex flex-col items-center justify-center gap-2 p-4 sm:p-5 rounded-xl metal-border bg-surface text-center min-h-[100px]">
+            <img
+              src={partner.logo}
+              alt={`Логотип ${partner.name}`}
+              width="160"
+              height="56"
+              loading="lazy"
+              decoding="async"
+              class="h-10 sm:h-12 w-auto max-w-[140px] object-contain"
+            />
+            <span class="text-xs text-steel-400">{partner.category}</span>
           </div>
         ))
       }
