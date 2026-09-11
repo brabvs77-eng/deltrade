@@ -65,7 +65,7 @@ const breadcrumbs = breadcrumbSchema([
               {products.map((product) => (
                 <MetalCard href={`/katalog/product/${product.slug}/`}>
                   <div class="aspect-[4/3] rounded-lg overflow-hidden mb-4 metal-border">
-                    <ProductImage subsection={product.subsection} title={product.title} thumb />
+                    <ProductImage slug={product.slug} subsection={product.subsection} title={product.title} thumb />
                   </div>
                   <h2 class="font-bold text-steel-900 group-hover:text-brand transition-colors">
                     {product.title}

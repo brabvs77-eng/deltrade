@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
-import { SITE } from '../../lib/constants';
+import { SITE, REQUISITES } from '../../lib/constants';
 import { breadcrumbSchema, localBusinessSchema } from '../../lib/seo/schema';
 
 const breadcrumbs = breadcrumbSchema([
@@ -48,6 +48,72 @@ const breadcrumbs = breadcrumbSchema([
           <h2 class="font-semibold text-steel-900 text-sm">Режим работы</h2>
           <p class="mt-2 text-steel-600">{SITE.workHours}</p>
         </div>
+      </div>
+
+      <div class="rounded-xl metal-border bg-white p-6 sm:p-8 mb-12">
+        <h2 class="text-xl font-bold text-steel-900 mb-6">Реквизиты компании</h2>
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+          <div>
+            <dt class="text-steel-500">Полное наименование</dt>
+            <dd class="mt-1 font-medium text-steel-900">{SITE.legalNameFull}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">Сокращённое наименование</dt>
+            <dd class="mt-1 font-medium text-steel-900">{SITE.legalName}</dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-steel-500">Юридический адрес</dt>
+            <dd class="mt-1 font-medium text-steel-900">{SITE.address}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">ИНН</dt>
+            <dd class="mt-1 font-medium text-steel-900">{REQUISITES.inn}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">КПП</dt>
+            <dd class="mt-1 font-medium text-steel-900">{REQUISITES.kpp}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">ОГРН</dt>
+            <dd class="mt-1 font-medium text-steel-900">{REQUISITES.ogrn}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">Система налогообложения</dt>
+            <dd class="mt-1 font-medium text-steel-900">{REQUISITES.taxation}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">Ставка НДС</dt>
+            <dd class="mt-1 font-medium text-steel-900">{REQUISITES.vat}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">Генеральный директор</dt>
+            <dd class="mt-1 font-medium text-steel-900">{REQUISITES.director}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">Банк</dt>
+            <dd class="mt-1 font-medium text-steel-900">{REQUISITES.bank}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">БИК</dt>
+            <dd class="mt-1 font-medium text-steel-900">{REQUISITES.bik}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">Расчётный счёт</dt>
+            <dd class="mt-1 font-medium text-steel-900 font-mono text-xs sm:text-sm">{REQUISITES.account}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">Корреспондентский счёт</dt>
+            <dd class="mt-1 font-medium text-steel-900 font-mono text-xs sm:text-sm">{REQUISITES.corrAccount}</dd>
+          </div>
+          <div class="sm:col-span-2">
+            <dt class="text-steel-500">Идентификатор ЭДО (Контур.Диадок)</dt>
+            <dd class="mt-1 font-medium text-steel-900 font-mono text-xs break-all">{REQUISITES.edo}</dd>
+          </div>
+          <div>
+            <dt class="text-steel-500">Рег. номер в ЕИС</dt>
+            <dd class="mt-1 font-medium text-steel-900">{REQUISITES.eis}</dd>
+          </div>
+        </dl>
       </div>
 
       <div class="rounded-xl steel-section p-6 sm:p-8 max-w-2xl">

@@ -7,7 +7,7 @@ import { SITE } from '../../lib/constants';
   <div class="section-container">
     <SectionHeading title="Контакты" align="center" />
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
       <div class="text-center p-6 rounded-xl metal-border bg-surface">
         <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
         <h3 class="font-semibold text-steel-900 text-sm">Телефон</h3>
@@ -17,6 +17,11 @@ import { SITE } from '../../lib/constants';
         <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
         <h3 class="font-semibold text-steel-900 text-sm">Email</h3>
         <a href={`mailto:${SITE.email}`} class="mt-2 block text-brand font-medium hover:underline">{SITE.email}</a>
+      </div>
+      <div class="text-center p-6 rounded-xl metal-border bg-surface">
+        <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
+        <h3 class="font-semibold text-steel-900 text-sm">Адрес</h3>
+        <p class="mt-2 text-steel-600 text-sm leading-relaxed">{SITE.address}</p>
       </div>
       <div class="text-center p-6 rounded-xl metal-border bg-surface">
         <div class="rivet mx-auto mb-3" aria-hidden="true"></div>

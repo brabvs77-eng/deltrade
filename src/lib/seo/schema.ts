@@ -12,7 +12,10 @@ export function organizationSchema() {
     telephone: SITE.phone,
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Москва',
+      streetAddress: 'ул. Дачная, д. 11А',
+      addressLocality: 'Красногорск',
+      addressRegion: 'Московская область',
+      postalCode: '143404',
       addressCountry: 'RU',
     },
   };
@@ -57,7 +60,10 @@ export function localBusinessSchema() {
     openingHours: 'Mo-Fr 09:00-18:00',
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Москва',
+      streetAddress: 'ул. Дачная, д. 11А',
+      addressLocality: 'Красногорск',
+      addressRegion: 'Московская область',
+      postalCode: '143404',
       addressCountry: 'RU',
     },
   };

@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "generate:product-images": "node scripts/generate-product-images.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },

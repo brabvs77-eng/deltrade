@@ -20,7 +20,7 @@ const subsectionTitle = getSubsectionTitle(product.section, product.subsection);
 const pricePerKg = (product.pricePerTon / 1000).toFixed(0);
 const paragraphs = product.description.split('\n\n');
 
-const productImage = `${SITE.url}${getProductImage(product.subsection)}`;
+const productImage = `${SITE.url}${getProductImage(product.slug, product.subsection)}`;
 
 const productSchema = {
   '@context': 'https://schema.org',
@@ -78,7 +78,7 @@ const breadcrumbs = breadcrumbSchema([
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         <div class="aspect-[4/3] rounded-xl overflow-hidden metal-border relative">
-          <ProductImage subsection={product.subsection} title={product.title} />
+          <ProductImage slug={product.slug} subsection={product.subsection} title={product.title} />
           <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-steel-900/80 to-transparent p-4">
             <p class="text-white text-sm font-medium">{product.gost}</p>
           </div>

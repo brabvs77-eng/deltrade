@@ -21,7 +21,9 @@ const SERVICE_IMAGES: Record<string, string> = {
 export const HERO_BG = '/images/hero/hero-bg.webp';
 export const OG_DEFAULT = '/images/og-default.webp';
 
-export function getProductImage(subsection: string, thumb = false): string {
+export function getProductImage(slug: string, subsection: string, thumb = false): string {
+  const perProduct = `/images/products/${slug}${thumb ? '-thumb' : ''}.webp`;
+  if (slug) return perProduct;
   const base = SUBSECTION_IMAGES[subsection] ?? '/images/products/armatura.webp';
   if (thumb) return base.replace('.webp', '-thumb.webp');
   return base;

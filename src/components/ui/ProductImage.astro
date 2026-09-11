@@ -2,14 +2,15 @@
 import { getProductImage, getProductImageAlt } from '../../lib/images';
 
 interface Props {
+  slug: string;
   subsection: string;
   title: string;
   thumb?: boolean;
   class?: string;
 }
 
-const { subsection, title, thumb = false, class: className = '' } = Astro.props;
-const src = getProductImage(subsection, thumb);
+const { slug, subsection, title, thumb = false, class: className = '' } = Astro.props;
+const src = getProductImage(slug, subsection, thumb);
 const alt = getProductImageAlt(title);
 ---
 
