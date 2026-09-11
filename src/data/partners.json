@@ -1,10 +1,10 @@
 [
-  { "name": "НЛМК", "category": "Металлургия" },
-  { "name": "Северсталь", "category": "Металлургия" },
-  { "name": "ММК", "category": "Металлургия" },
-  { "name": "ТМК", "category": "Трубный прокат" },
-  { "name": "ЧТПЗ", "category": "Трубный прокат" },
-  { "name": "Мечел", "category": "Металлургия" },
-  { "name": "Деловые Линии", "category": "Логистика" },
-  { "name": "ПЭК", "category": "Логистика" }
+  { "name": "НЛМК", "category": "Металлургия", "slug": "nlmk", "logo": "/images/partners/nlmk.webp" },
+  { "name": "Северсталь", "category": "Металлургия", "slug": "severstal", "logo": "/images/partners/severstal.webp" },
+  { "name": "ММК", "category": "Металлургия", "slug": "mmk", "logo": "/images/partners/mmk.webp" },
+  { "name": "ТМК", "category": "Трубный прокат", "slug": "tmk", "logo": "/images/partners/tmk.webp" },
+  { "name": "ЧТПЗ", "category": "Трубный прокат", "slug": "chtpz", "logo": "/images/partners/chtpz.webp" },
+  { "name": "Мечел", "category": "Металлургия", "slug": "mechel", "logo": "/images/partners/mechel.webp" },
+  { "name": "Деловые Линии", "category": "Логистика", "slug": "dellin", "logo": "/images/partners/dellin.webp" },
+  { "name": "ПЭК", "category": "Логистика", "slug": "pek", "logo": "/images/partners/pek.webp" }
 ]
