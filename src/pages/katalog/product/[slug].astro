@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Button from '../../../components/ui/Button.astro';
+import { getAllProducts, getSectionTitle, getSubsectionTitle } from '../../../lib/catalog';
+import { breadcrumbSchema } from '../../../lib/seo/schema';
+import { SITE } from '../../../lib/constants';
+
+export function getStaticPaths() {
+  return getAllProducts().map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const sectionTitle = getSectionTitle(product.section);
+const subsectionTitle = getSubsectionTitle(product.section, product.subsection);
+const pricePerKg = (product.pricePerTon / 1000).toFixed(0);
+const paragraphs = product.description.split('\n\n');
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.title,
+  description: product.description.replace(/\n/g, ' '),
+  brand: { '@type': 'Brand', name: 'DELDIN TRADE' },
+  sku: product.slug,
+  offers: {
+    '@type': 'Offer',
+    priceCurrency: 'RUB',
+    price: pricePerKg,
+    priceSpecification: {
+      '@type': 'UnitPriceSpecification',
+      price: product.pricePerTon,
+      priceCurrency: 'RUB',
+      unitText: 'тонна',
+    },
+    availability: 'https://schema.org/PreOrder',
+    seller: { '@type': 'Organization', name: SITE.legalName },
+  },
+  additionalProperty: [
+    { '@type': 'PropertyValue', name: 'ГОСТ', value: product.gost },
+    { '@type': 'PropertyValue', name: 'Марка стали', value: product.steelGrade },
+    { '@type': 'PropertyValue', name: 'Вес погонного метра', value: `${product.weightPerMeter} кг/м` },
+  ],
+};
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Каталог', url: `${SITE.url}/katalog/` },
+  { name: sectionTitle, url: `${SITE.url}/katalog/${product.section}/` },
+  { name: product.title, url: `${SITE.url}/katalog/product/${product.slug}/` },
+]);
+---
+
+<BaseLayout
+  title={product.title}
+  description={`${product.title} — ${product.gost}, марка ${product.steelGrade}. Вес ${product.weightPerMeter} кг/м. Поставка по спецификации, доставка по России.`}
+  path={`/katalog/product/${product.slug}/`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+
+  <article class="py-8 sm:py-12">
+    <div class="section-container">
+      <nav class="text-sm text-steel-500 mb-6" aria-label="Хлебные крошки">
+        <a href="/katalog/" class="hover:text-brand">Каталог</a>
+        <span class="mx-1.5">/</span>
+        <a href={`/katalog/${product.section}/`} class="hover:text-brand">{sectionTitle}</a>
+        <span class="mx-1.5">/</span>
+        <span class="text-steel-700">{product.title}</span>
+      </nav>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <!-- Image placeholder -->
+        <div class="aspect-[4/3] rounded-xl diamond-plate flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 metal-surface-dark opacity-80"></div>
+          <div class="relative text-center p-8">
+            <p class="text-steel-400 text-xs uppercase tracking-[0.3em] mb-2">DELDIN TRADE</p>
+            <p class="text-white text-xl sm:text-2xl font-bold">{product.h1}</p>
+            <p class="text-steel-500 mt-2 text-sm">{product.gost}</p>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-steel-900 leading-tight">{product.h1}</h1>
+
+          <table class="mt-6 w-full text-sm">
+            <tbody class="divide-y divide-steel-200">
+              <tr><td class="py-2 text-steel-500 w-2/5">ГОСТ</td><td class="py-2 font-medium">{product.gost}</td></tr>
+              <tr><td class="py-2 text-steel-500">Марка стали</td><td class="py-2 font-medium">{product.steelGrade}</td></tr>
+              <tr><td class="py-2 text-steel-500">Вес погонного метра</td><td class="py-2 font-medium">{product.weightPerMeter} кг/м</td></tr>
+              <tr><td class="py-2 text-steel-500">Цена ориентир</td><td class="py-2 font-medium text-brand">от {pricePerKg} ₽/кг ({product.pricePerTon.toLocaleString('ru-RU')} ₽/т)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            <Button href="/#zayavka" variant="primary" size="lg" class="w-full sm:w-auto">
+              Запросить расчёт
+            </Button>
+            <Button href="/kalkulyator-metalla/" variant="outline" size="lg" class="w-full sm:w-auto">
+              Рассчитать вес
+            </Button>
+          </div>
+
+          <p class="mt-3 text-xs text-steel-400">Цена ориентировочная, не является публичной офертой</p>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mt-12 max-w-3xl">
+        <h2 class="text-xl font-bold text-steel-900 mb-4">Описание</h2>
+        {paragraphs.map((p) => (
+          <p class="text-steel-600 leading-relaxed mb-4">{p}</p>
+        ))}
+
+        <h3 class="text-lg font-bold text-steel-900 mt-8 mb-3">Применение</h3>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {product.useCases.map((use) => (
+            <li class="flex items-center gap-2 text-sm text-steel-600">
+              <svg class="w-4 h-4 text-brand shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+              {use}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
