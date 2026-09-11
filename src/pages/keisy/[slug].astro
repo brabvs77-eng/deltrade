@@ -17,7 +17,7 @@ const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: caseStudy.title,
-  description: caseStudy.task,
+  description: caseStudy.intro ?? caseStudy.task,
   image: caseStudy.image ? `${SITE.url}${caseStudy.image}` : undefined,
   author: { '@type': 'Organization', name: SITE.legalName },
 };
@@ -31,7 +31,7 @@ const breadcrumbs = breadcrumbSchema([
 
 <BaseLayout
   title={caseStudy.title}
-  description={caseStudy.task}
+  description={caseStudy.intro ?? caseStudy.task}
   path={`/keisy/${caseStudy.slug}/`}
 >
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
@@ -64,7 +64,34 @@ const breadcrumbs = breadcrumbSchema([
         )
       }
 
+      {
+        caseStudy.intro && (
+          <p class="text-steel-600 leading-relaxed text-base sm:text-lg mb-8">{caseStudy.intro}</p>
+        )
+      }
+
+      {
+        caseStudy.stats && caseStudy.stats.length > 0 && (
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+            {caseStudy.stats.map((stat) => (
+              <div class="rounded-xl metal-border bg-surface p-4 text-center">
+                <p class="text-xl sm:text-2xl font-bold text-brand">{stat.value}</p>
+                <p class="mt-1 text-xs text-steel-500">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        )
+      }
+
       <div class="space-y-8">
+        {
+          caseStudy.context && (
+            <div>
+              <h2 class="text-lg font-bold text-steel-900 mb-2">Контекст проекта</h2>
+              <p class="text-steel-600 leading-relaxed">{caseStudy.context}</p>
+            </div>
+          )
+        }
         <div>
           <h2 class="text-lg font-bold text-steel-900 mb-2">Задача</h2>
           <p class="text-steel-600 leading-relaxed">{caseStudy.task}</p>
@@ -73,6 +100,23 @@ const breadcrumbs = breadcrumbSchema([
           <h2 class="text-lg font-bold text-steel-900 mb-2">Решение</h2>
           <p class="text-steel-600 leading-relaxed">{caseStudy.solution}</p>
         </div>
+        {
+          caseStudy.steps && caseStudy.steps.length > 0 && (
+            <div>
+              <h2 class="text-lg font-bold text-steel-900 mb-4">Этапы работы</h2>
+              <ol class="space-y-3">
+                {caseStudy.steps.map((step, i) => (
+                  <li class="flex gap-4">
+                    <span class="flex items-center justify-center w-7 h-7 rounded-full metal-surface metal-border text-steel-700 font-bold text-xs shrink-0">
+                      {i + 1}
+                    </span>
+                    <p class="text-steel-600 leading-relaxed text-sm sm:text-base pt-0.5">{step}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )
+        }
         <div>
           <h2 class="text-lg font-bold text-steel-900 mb-2">Номенклатура</h2>
           <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2">

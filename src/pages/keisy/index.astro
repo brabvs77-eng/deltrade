@@ -16,7 +16,7 @@ const breadcrumbs = breadcrumbSchema([
 
 <BaseLayout
   title="Реализованные поставки"
-  description="Кейсы DELDIN TRADE: реальные поставки металлопроката для строительства и промышленности."
+  description="Кейсы DELDIN TRADE: реальные поставки металлопроката для строительства, промышленности и машиностроения. Задача, решение, сроки и результат."
   path="/keisy/"
 >
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
@@ -26,6 +26,17 @@ const breadcrumbs = breadcrumbSchema([
     subtitle="Задача, решение, номенклатура, география и срок"
     breadcrumb={[{ label: 'Главная', href: '/' }, { label: 'Кейсы' }]}
   />
+
+  <section class="py-8 sm:py-10 bg-white border-b border-steel-200">
+    <div class="section-container max-w-3xl">
+      <p class="text-steel-600 leading-relaxed">
+        DELDIN TRADE поставляет металлопрокат и комплектующие для строительства, промышленности,
+        логистики и машиностроения по всей России. Ниже — примеры реальных проектов: от комплектации
+        арматуры на жилой комплекс до поставки редких марок стали под заказ. В каждом кейсе —
+        задача заказчика, наше решение, номенклатура и измеримый результат.
+      </p>
+    </div>
+  </section>
 
   <section class="py-10 sm:py-14">
     <div class="section-container">
@@ -52,7 +63,18 @@ const breadcrumbs = breadcrumbSchema([
                 <span class="text-xs text-steel-400">{c.region} · {c.duration}</span>
               </div>
               <h2 class="text-lg font-bold text-steel-900 group-hover:text-brand transition-colors">{c.title}</h2>
-              <p class="mt-2 text-sm text-steel-500 line-clamp-2">{c.task}</p>
+              <p class="mt-2 text-sm text-steel-500 line-clamp-3">{c.intro ?? c.task}</p>
+              {
+                c.stats && c.stats.length > 0 && (
+                  <div class="mt-4 flex flex-wrap gap-2">
+                    {c.stats.slice(0, 2).map((stat) => (
+                      <span class="px-2 py-1 rounded-md text-xs font-medium bg-steel-100 text-steel-600">
+                        {stat.value} — {stat.label.toLowerCase()}
+                      </span>
+                    ))}
+                  </div>
+                )
+              }
             </MetalCard>
           ))
         }
