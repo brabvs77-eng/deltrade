@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import regions from '../../data/regions.json';
+import { SITE } from '../../lib/constants';
+import { breadcrumbSchema } from '../../lib/seo/schema';
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'География', url: `${SITE.url}/geografiya/` },
+]);
+---
+
+<BaseLayout
+  title="География поставок"
+  description="DELDIN TRADE доставляет металлопрокат по России: Москва и МО, Санкт-Петербург, регионы. Логистика автотранспортом и ж/д."
+  path="/geografiya/"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+
+  <PageHero
+    title="География поставок"
+    subtitle="Доставка металлопроката и комплектующих на объекты по всей России"
+    breadcrumb={[{ label: 'Главная', href: '/' }, { label: 'География' }]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container max-w-3xl">
+      <p class="text-steel-600 leading-relaxed mb-8">
+        Офис и складская логистика — {SITE.address}. Организуем доставку автотранспортом и железнодорожным транспортом
+        в регионы России. Для крупных проектов — поэтапная отгрузка по графику строительства.
+      </p>
+
+      <h2 class="text-xl font-bold text-steel-900 mb-4">Регионы поставок</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {
+          regions.map((region) => (
+            <div
+              class={`rounded-xl metal-border p-4 ${region.highlight ? 'bg-brand/5 border-brand/30' : 'bg-white'}`}
+            >
+              <span class={`font-semibold ${region.highlight ? 'text-brand' : 'text-steel-900'}`}>
+                {region.name}
+              </span>
+              {region.highlight && (
+                <span class="ml-2 text-xs text-brand font-medium">приоритетный</span>
+              )}
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-10 space-y-4">
+        <h2 class="text-xl font-bold text-steel-900">Логистика</h2>
+        <ul class="space-y-3 text-steel-600 text-sm leading-relaxed">
+          <li class="flex gap-2">
+            <span class="text-brand font-bold">→</span>
+            Автодоставка на объект — от 1 тонны, согласование времени разгрузки
+          </li>
+          <li class="flex gap-2">
+            <span class="text-brand font-bold">→</span>
+            Ж/д отгрузка — для крупных партий в удалённые регионы
+          </li>
+          <li class="flex gap-2">
+            <span class="text-brand font-bold">→</span>
+            Самовывоз со складов партнёров в Московской области
+          </li>
+          <li class="flex gap-2">
+            <span class="text-brand font-bold">→</span>
+            Страхование груза и фотоотчёт при отгрузке по запросу
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <RequestFormBlock title="Рассчитать доставку в ваш регион" />
+</BaseLayout>

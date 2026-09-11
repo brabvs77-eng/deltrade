@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Button from '../../components/ui/Button.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import { getAllIndustries } from '../../lib/industries';
+import { breadcrumbSchema } from '../../lib/seo/schema';
+import { SITE } from '../../lib/constants';
+
+export function getStaticPaths() {
+  return getAllIndustries().map((ind) => ({
+    params: { slug: ind.slug },
+    props: { industry: ind },
+  }));
+}
+
+const { industry } = Astro.props;
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Отрасли', url: `${SITE.url}/otrasli/` },
+  { name: industry.title, url: `${SITE.url}/otrasli/${industry.slug}/` },
+]);
+---
+
+<BaseLayout
+  title={`${industry.title} — поставки металлопроката`}
+  description={industry.description}
+  path={`/otrasli/${industry.slug}/`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+
+  <PageHero
+    title={industry.title}
+    subtitle={industry.description}
+    breadcrumb={[
+      { label: 'Главная', href: '/' },
+      { label: 'Отрасли', href: '/otrasli/' },
+      { label: industry.title },
+    ]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container max-w-3xl">
+      {industry.details && (
+        <p class="text-steel-600 leading-relaxed text-base sm:text-lg">{industry.details}</p>
+      )}
+
+      {
+        industry.products && industry.products.length > 0 && (
+          <div class="mt-10">
+            <h2 class="text-xl font-bold text-steel-900 mb-4">Типовая номенклатура</h2>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {industry.products.map((item) => (
+                <li class="flex items-center gap-2 text-sm text-steel-600">
+                  <svg class="w-4 h-4 text-brand shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      <div class="mt-10 flex flex-col sm:flex-row gap-3">
+        <Button href="/#zayavka" variant="primary" size="lg">Запросить расчёт</Button>
+        <Button href="/katalog/" variant="outline" size="lg">Каталог</Button>
+      </div>
+    </div>
+  </section>
+
+  <RequestFormBlock title={`Заявка для отрасли «${industry.title}»`} />
+</BaseLayout>

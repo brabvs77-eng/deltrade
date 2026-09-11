@@ -48,11 +48,21 @@
   },
   {
     "id": "strip",
-    "name": "Полоса / лента",
+    "name": "Полоса",
     "icon": "▬",
     "fields": [
       { "key": "t", "label": "Толщина t", "unit": "мм", "default": 4 },
       { "key": "b", "label": "Ширина B", "unit": "мм", "default": 40 },
+      { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
+    ]
+  },
+  {
+    "id": "busbar",
+    "name": "Лента / шина",
+    "icon": "═",
+    "fields": [
+      { "key": "t", "label": "Толщина t", "unit": "мм", "default": 2 },
+      { "key": "b", "label": "Ширина B", "unit": "мм", "default": 100 },
       { "key": "l", "label": "Длина L", "unit": "м", "default": 1, "isLength": true }
     ]
   },

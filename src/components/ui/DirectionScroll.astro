@@ -1,0 +1,39 @@
+---
+interface Item {
+  href: string;
+  title: string;
+  description?: string;
+  count?: number;
+  slug?: string;
+}
+
+interface Props {
+  items: Item[];
+  showImages?: boolean;
+}
+
+const { items, showImages = false } = Astro.props;
+import DirectionImage from './DirectionImage.astro';
+import MetalCard from './MetalCard.astro';
+---
+
+<div class="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:overflow-visible sm:pb-0">
+  {
+    items.map((item) => (
+      <div class="snap-start shrink-0 w-[85vw] sm:w-auto sm:shrink">
+        <MetalCard href={item.href} class="h-full">
+          {showImages && item.slug && (
+            <div class="aspect-[16/10] rounded-lg overflow-hidden mb-4 metal-border">
+              <DirectionImage slug={item.slug} title={item.title} thumb />
+            </div>
+          )}
+          <h3 class="font-bold text-steel-900 group-hover:text-brand transition-colors text-lg">{item.title}</h3>
+          {item.description && <p class="mt-1 text-sm text-steel-500 leading-relaxed">{item.description}</p>}
+          {item.count !== undefined && item.count > 0 && (
+            <span class="mt-2 inline-block text-xs text-brand font-medium">{item.count} позиций</span>
+          )}
+        </MetalCard>
+      </div>
+    ))
+  }
+</div>

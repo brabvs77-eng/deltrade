@@ -1,5 +1,11 @@
 import products from '../data/products.json';
+import sectionsContent from '../data/sections-content.json';
 import { CATALOG_DIRECTIONS } from './constants';
+
+export interface ProductFaq {
+  question: string;
+  answer: string;
+}
 
 export interface Product {
   slug: string;
@@ -12,8 +18,11 @@ export interface Product {
   diameter: number | null;
   weightPerMeter: number;
   pricePerTon: number;
+  pricePerUnit?: number | null;
   description: string;
   useCases: string[];
+  faq?: ProductFaq[];
+  relatedSlugs?: string[];
   calculatorPreset: {
     profileId: string;
     metalId: string;
@@ -41,6 +50,10 @@ export function getSectionTitle(slug: string): string {
   return CATALOG_DIRECTIONS.find((d) => d.slug === slug)?.title ?? slug;
 }
 
+export function getSectionContent(section: string) {
+  return (sectionsContent as Record<string, { intro: string; competitorNotes: string; subsections: { slug: string; title: string }[] }>)[section];
+}
+
 export const SUBSECTIONS: Record<string, { slug: string; title: string }[]> = {
   metalloprokat: [
     { slug: 'armatura', title: 'Арматура' },
@@ -54,6 +67,11 @@ export const SUBSECTIONS: Record<string, { slug: string; title: string }[]> = {
     { slug: 'polosa', title: 'Полоса' },
     { slug: 'shestigrannik', title: 'Шестигранник' },
   ],
+  ...Object.fromEntries(
+    Object.entries(sectionsContent as Record<string, { subsections: { slug: string; title: string }[] }>).map(
+      ([key, val]) => [key, val.subsections],
+    ),
+  ),
 };
 
 export function getSubsectionTitle(section: string, subsection: string): string {

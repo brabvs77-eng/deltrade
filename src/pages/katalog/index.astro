@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionHeading from '../../components/ui/SectionHeading.astro';
-import MetalCard from '../../components/ui/MetalCard.astro';
+import DirectionScroll from '../../components/ui/DirectionScroll.astro';
 import { CATALOG_DIRECTIONS } from '../../lib/constants';
 import { getAllProducts } from '../../lib/catalog';
 import { breadcrumbSchema } from '../../lib/seo/schema';
@@ -12,11 +12,19 @@ const breadcrumbs = breadcrumbSchema([
   { name: 'Главная', url: SITE.url },
   { name: 'Каталог', url: `${SITE.url}/katalog/` },
 ]);
+
+const directionItems = CATALOG_DIRECTIONS.map((dir) => ({
+  href: `/katalog/${dir.slug}/`,
+  title: dir.title,
+  description: dir.description,
+  slug: dir.slug,
+  count: products.filter((p) => p.section === dir.slug).length,
+}));
 ---
 
 <BaseLayout
   title="Каталог металлопроката и материалов"
-  description="Каталог металлопроката DELDIN TRADE: арматура, трубы, лист, уголок, швеллер, двутавр. Комплексные поставки по спецификации с доставкой по России."
+  description="Каталог DELDIN TRADE: металлопрокат, спецстали, инженерные системы, кровля, комплексная комплектация. Поставка по спецификации с доставкой по России."
   path="/katalog/"
 >
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
@@ -25,32 +33,15 @@ const breadcrumbs = breadcrumbSchema([
     <div class="section-container">
       <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white">Каталог</h1>
       <p class="mt-3 text-steel-300 max-w-2xl">
-        Металлопрокат, инженерные системы и стройматериалы. Запросите расчёт по спецификации.
+        10 направлений поставок: от металлопроката до комплексной комплектации объекта. {products.length} позиций в каталоге.
       </p>
     </div>
   </section>
 
   <section class="py-10 sm:py-14 perforated-bg-light">
     <div class="section-container">
-      <SectionHeading title="Направления" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {
-          CATALOG_DIRECTIONS.map((dir) => {
-            const count = products.filter((p) => p.section === dir.slug).length;
-            return (
-              <MetalCard href={`/katalog/${dir.slug}/`}>
-                <h2 class="font-bold text-steel-900 group-hover:text-brand transition-colors text-lg">
-                  {dir.title}
-                </h2>
-                <p class="mt-1 text-sm text-steel-500">{dir.description}</p>
-                {count > 0 && (
-                  <span class="mt-2 inline-block text-xs text-brand font-medium">{count} позиций</span>
-                )}
-              </MetalCard>
-            );
-          })
-        }
-      </div>
+      <SectionHeading title="Направления" subtitle="Выберите раздел или отправьте спецификацию — подберём позиции под задачу" />
+      <DirectionScroll items={directionItems} showImages={true} />
     </div>
   </section>
 </BaseLayout>

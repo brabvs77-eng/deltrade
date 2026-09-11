@@ -10,6 +10,7 @@ export interface CaseStudy {
   solution: string;
   items: string[];
   result: string;
+  image?: string;
 }
 
 export function getAllCases(): CaseStudy[] {

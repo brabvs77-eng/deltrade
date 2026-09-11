@@ -31,8 +31,11 @@ export const REQUISITES = {
 export const NAV_LINKS = [
   { href: '/katalog/', label: 'Каталог' },
   { href: '/uslugi/', label: 'Услуги' },
+  { href: '/otrasli/', label: 'Отрасли' },
   { href: '/kalkulyator-metalla/', label: 'Калькулятор' },
   { href: '/keisy/', label: 'Кейсы' },
+  { href: '/dokumenty/', label: 'Документы' },
+  { href: '/geografiya/', label: 'География' },
   { href: '/o-kompanii/', label: 'О компании' },
   { href: '/kontakty/', label: 'Контакты' },
 ] as const;
