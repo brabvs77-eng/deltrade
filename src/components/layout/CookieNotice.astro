@@ -1,0 +1,36 @@
+<div
+  id="cookie-notice"
+  class="hidden fixed inset-x-0 bottom-14 md:bottom-4 md:left-4 md:right-auto md:max-w-md z-[60] border-t md:border border-steel-200 bg-white/95 p-4 shadow-lg backdrop-blur md:rounded-xl"
+  role="dialog"
+  aria-label="Уведомление о cookie"
+  aria-live="polite"
+>
+  <p class="text-sm text-steel-600 leading-relaxed">
+    Мы используем cookie для аналитики и улучшения сайта. Продолжая пользоваться сайтом, вы соглашаетесь с
+    <a href="/politika-obrabotki-personalnyh-dannyh/" class="text-brand underline">политикой обработки персональных данных</a>
+    и
+    <a href="/politika-konfidencialnosti/" class="text-brand underline">политикой конфиденциальности</a>.
+  </p>
+  <button
+    type="button"
+    id="cookie-accept"
+    class="mt-3 w-full sm:w-auto inline-flex items-center justify-center px-6 py-2.5 bg-brand text-white font-semibold rounded-lg hover:bg-brand-light transition-colors min-h-[44px]"
+  >
+    Принять
+  </button>
+</div>
+
+<script>
+  const COOKIE_KEY = 'deldin-cookie-consent';
+  const notice = document.getElementById('cookie-notice');
+  const acceptBtn = document.getElementById('cookie-accept');
+
+  if (notice && localStorage.getItem(COOKIE_KEY) !== 'accepted') {
+    notice.classList.remove('hidden');
+  }
+
+  acceptBtn?.addEventListener('click', () => {
+    localStorage.setItem(COOKIE_KEY, 'accepted');
+    notice?.classList.add('hidden');
+  });
+</script>

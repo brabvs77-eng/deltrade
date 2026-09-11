@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import MobileCTA from '../components/layout/MobileCTA.astro';
+import CookieNotice from '../components/layout/CookieNotice.astro';
 import { buildMeta, type PageMeta } from '../lib/seo/meta';
 import { organizationSchema, websiteSchema } from '../lib/seo/schema';
 import { SITE } from '../lib/constants';
@@ -47,6 +48,7 @@ const schemas = [organizationSchema(), websiteSchema()];
       <slot />
     </main>
     <Footer />
+    <CookieNotice />
     {showMobileCTA && <MobileCTA />}
   </body>
 </html>

@@ -61,10 +61,17 @@ const year = new Date().getFullYear();
       </div>
     </div>
 
-    <div class="mt-10 pt-6 border-t border-steel-700/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-steel-500">
+    <p class="mt-10 text-xs text-steel-500 leading-relaxed max-w-4xl">
+      Официальный сайт компании {SITE.name} ({SITE.legalName}) по поставкам металлопроката и комплексной комплектации.
+      Сайт носит информационный характер и не является публичной офертой, определяемой положениями ст.&nbsp;437 ГК&nbsp;РФ.
+      Для получения более точной информации обращайтесь по указанным в контактах телефонам.
+    </p>
+
+    <div class="mt-6 pt-6 border-t border-steel-700/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-steel-500">
       <p>&copy; {year} {SITE.legalName}. Все права защищены.</p>
-      <div class="flex gap-4">
+      <div class="flex flex-wrap justify-center gap-x-4 gap-y-2">
         <a href="/politika-konfidencialnosti/" class="hover:text-steel-300 transition-colors">Политика конфиденциальности</a>
+        <a href="/politika-obrabotki-personalnyh-dannyh/" class="hover:text-steel-300 transition-colors">Политика обработки персональных данных</a>
       </div>
     </div>
   </div>
