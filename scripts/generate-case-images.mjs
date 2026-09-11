@@ -1,5 +1,6 @@
 /**
- * Generates WebP images for case studies.
+ * @deprecated Use scripts/case-photos/ + convert-case-photos.mjs for photorealistic images.
+ * Legacy SVG generator kept for fallback.
  */
 import { readFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
