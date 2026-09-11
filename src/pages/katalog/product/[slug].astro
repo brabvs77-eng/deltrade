@@ -2,7 +2,13 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Button from '../../../components/ui/Button.astro';
 import ProductImage from '../../../components/ui/ProductImage.astro';
-import { getAllProducts, getSectionTitle, getSubsectionTitle } from '../../../lib/catalog';
+import MetalCard from '../../../components/ui/MetalCard.astro';
+import {
+  getAllProducts,
+  getSectionTitle,
+  getSubsectionTitle,
+  getProductBySlug,
+} from '../../../lib/catalog';
 import { getProductImage } from '../../../lib/images';
 import { breadcrumbSchema } from '../../../lib/seo/schema';
 import { SITE } from '../../../lib/constants';
@@ -17,8 +23,21 @@ export function getStaticPaths() {
 const { product } = Astro.props;
 const sectionTitle = getSectionTitle(product.section);
 const subsectionTitle = getSubsectionTitle(product.section, product.subsection);
-const pricePerKg = (product.pricePerTon / 1000).toFixed(0);
+const pricePerKg = product.pricePerTon > 0 ? (product.pricePerTon / 1000).toFixed(0) : null;
 const paragraphs = product.description.split('\n\n');
+const faq = product.faq ?? [];
+const relatedProducts = (product.relatedSlugs ?? [])
+  .map((slug) => getProductBySlug(slug))
+  .filter(Boolean);
+
+const calcParams = new URLSearchParams({
+  profile: product.calculatorPreset.profileId,
+  metal: product.calculatorPreset.metalId,
+  ...Object.fromEntries(
+    Object.entries(product.calculatorPreset.dimensions).map(([k, v]) => [k, String(v)]),
+  ),
+});
+const calcHref = `/kalkulyator-metalla/?${calcParams.toString()}`;
 
 const productImage = `${SITE.url}${getProductImage(product.slug, product.subsection)}`;
 
@@ -33,22 +52,45 @@ const productSchema = {
   offers: {
     '@type': 'Offer',
     priceCurrency: 'RUB',
-    price: pricePerKg,
-    priceSpecification: {
-      '@type': 'UnitPriceSpecification',
-      price: product.pricePerTon,
-      priceCurrency: 'RUB',
-      unitText: 'тонна',
-    },
+    price: product.pricePerUnit ?? pricePerKg ?? '0',
+    priceSpecification: product.pricePerUnit
+      ? {
+          '@type': 'UnitPriceSpecification',
+          price: product.pricePerUnit,
+          priceCurrency: 'RUB',
+          unitText: 'единица',
+        }
+      : product.pricePerTon > 0
+        ? {
+            '@type': 'UnitPriceSpecification',
+            price: product.pricePerTon,
+            priceCurrency: 'RUB',
+            unitText: 'тонна',
+          }
+        : undefined,
     availability: 'https://schema.org/PreOrder',
     seller: { '@type': 'Organization', name: SITE.legalName },
   },
   additionalProperty: [
     { '@type': 'PropertyValue', name: 'ГОСТ', value: product.gost },
     { '@type': 'PropertyValue', name: 'Марка стали', value: product.steelGrade },
-    { '@type': 'PropertyValue', name: 'Вес погонного метра', value: `${product.weightPerMeter} кг/м` },
+    ...(product.weightPerMeter > 0
+      ? [{ '@type': 'PropertyValue', name: 'Вес погонного метра', value: `${product.weightPerMeter} кг/м` }]
+      : []),
   ],
 };
+
+const faqSchema = faq.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    }
+  : null;
 
 const breadcrumbs = breadcrumbSchema([
   { name: 'Главная', url: SITE.url },
@@ -60,11 +102,12 @@ const breadcrumbs = breadcrumbSchema([
 
 <BaseLayout
   title={product.title}
-  description={`${product.title} — ${product.gost}, марка ${product.steelGrade}. Вес ${product.weightPerMeter} кг/м. Поставка по спецификации, доставка по России.`}
+  description={`${product.title} — ${product.gost}, марка ${product.steelGrade}. ${product.weightPerMeter > 0 ? `Вес ${product.weightPerMeter} кг/м. ` : ''}Поставка по спецификации, доставка по России.`}
   path={`/katalog/product/${product.slug}/`}
 >
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
 
   <article class="py-8 sm:py-12">
     <div class="section-container">
@@ -81,19 +124,37 @@ const breadcrumbs = breadcrumbSchema([
           <ProductImage slug={product.slug} subsection={product.subsection} title={product.title} />
           <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-steel-900/80 to-transparent p-4">
             <p class="text-white text-sm font-medium">{product.gost}</p>
+            <p class="text-steel-300 text-xs mt-0.5">{subsectionTitle}</p>
           </div>
         </div>
 
-        <!-- Info -->
         <div>
           <h1 class="text-2xl sm:text-3xl font-extrabold text-steel-900 leading-tight">{product.h1}</h1>
 
           <table class="mt-6 w-full text-sm">
             <tbody class="divide-y divide-steel-200">
               <tr><td class="py-2 text-steel-500 w-2/5">ГОСТ</td><td class="py-2 font-medium">{product.gost}</td></tr>
-              <tr><td class="py-2 text-steel-500">Марка стали</td><td class="py-2 font-medium">{product.steelGrade}</td></tr>
-              <tr><td class="py-2 text-steel-500">Вес погонного метра</td><td class="py-2 font-medium">{product.weightPerMeter} кг/м</td></tr>
-              <tr><td class="py-2 text-steel-500">Цена ориентир</td><td class="py-2 font-medium text-brand">от {pricePerKg} ₽/кг ({product.pricePerTon.toLocaleString('ru-RU')} ₽/т)</td></tr>
+              <tr><td class="py-2 text-steel-500">Марка / материал</td><td class="py-2 font-medium">{product.steelGrade}</td></tr>
+              {
+                product.weightPerMeter > 0 && (
+                  <tr>
+                    <td class="py-2 text-steel-500">Вес погонного метра</td>
+                    <td class="py-2 font-medium">{product.weightPerMeter} кг/м</td>
+                  </tr>
+                )
+              }
+              <tr>
+                <td class="py-2 text-steel-500">Цена ориентир</td>
+                <td class="py-2 font-medium text-brand">
+                  {
+                    product.pricePerUnit
+                      ? `от ${product.pricePerUnit.toLocaleString('ru-RU')} ₽/ед.`
+                      : pricePerKg
+                        ? `от ${pricePerKg} ₽/кг (${product.pricePerTon.toLocaleString('ru-RU')} ₽/т)`
+                        : 'по запросу'
+                  }
+                </td>
+              </tr>
             </tbody>
           </table>
 
@@ -101,7 +162,7 @@ const breadcrumbs = breadcrumbSchema([
             <Button href="/#zayavka" variant="primary" size="lg" class="w-full sm:w-auto">
               Запросить расчёт
             </Button>
-            <Button href="/kalkulyator-metalla/" variant="outline" size="lg" class="w-full sm:w-auto">
+            <Button href={calcHref} variant="outline" size="lg" class="w-full sm:w-auto" data-calc-preset>
               Рассчитать вес
             </Button>
           </div>
@@ -110,7 +171,6 @@ const breadcrumbs = breadcrumbSchema([
         </div>
       </div>
 
-      <!-- Description -->
       <div class="mt-12 max-w-3xl">
         <h2 class="text-xl font-bold text-steel-900 mb-4">Описание</h2>
         {paragraphs.map((p) => (
@@ -129,6 +189,53 @@ const breadcrumbs = breadcrumbSchema([
           ))}
         </ul>
       </div>
+
+      {
+        faq.length > 0 && (
+          <div class="mt-12 max-w-3xl">
+            <h2 class="text-xl font-bold text-steel-900 mb-4">Частые вопросы</h2>
+            <div class="space-y-3">
+              {faq.map((item) => (
+                <details class="group rounded-xl metal-border bg-surface p-4 sm:p-5">
+                  <summary class="font-semibold text-steel-900 cursor-pointer list-none flex justify-between items-center">
+                    {item.question}
+                    <span class="text-steel-400 group-open:rotate-45 transition-transform text-xl ml-2">+</span>
+                  </summary>
+                  <p class="mt-3 text-sm text-steel-600 leading-relaxed">{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      {
+        relatedProducts.length > 0 && (
+          <div class="mt-14">
+            <h2 class="text-xl font-bold text-steel-900 mb-6">Похожие позиции</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {relatedProducts.map((rel) => (
+                <MetalCard href={`/katalog/product/${rel!.slug}/`}>
+                  <div class="aspect-[4/3] rounded-lg overflow-hidden mb-3 metal-border">
+                    <ProductImage slug={rel!.slug} subsection={rel!.subsection} title={rel!.title} thumb />
+                  </div>
+                  <h3 class="font-semibold text-steel-900 group-hover:text-brand transition-colors text-sm">
+                    {rel!.title}
+                  </h3>
+                  <p class="mt-1 text-xs text-steel-400">{rel!.gost}</p>
+                </MetalCard>
+              ))}
+            </div>
+          </div>
+        )
+      }
     </div>
   </article>
+
+  <script define:vars={{ preset: product.calculatorPreset }}>
+    const key = 'deldin-calc-preset';
+    document.querySelector('[data-calc-preset]')?.addEventListener('click', () => {
+      sessionStorage.setItem(key, JSON.stringify(preset));
+    });
+  </script>
 </BaseLayout>

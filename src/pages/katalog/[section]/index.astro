@@ -6,8 +6,8 @@ import ProductImage from '../../../components/ui/ProductImage.astro';
 import {
   getProductsBySection,
   getSectionTitle,
+  getSectionContent,
   SUBSECTIONS,
-  getSubsectionTitle,
 } from '../../../lib/catalog';
 import { breadcrumbSchema } from '../../../lib/seo/schema';
 import { SITE } from '../../../lib/constants';
@@ -21,6 +21,7 @@ const { section } = Astro.params;
 const products = getProductsBySection(section!);
 const title = getSectionTitle(section!);
 const subsections = SUBSECTIONS[section!] ?? [];
+const sectionContent = getSectionContent(section!);
 
 const breadcrumbs = breadcrumbSchema([
   { name: 'Главная', url: SITE.url },
@@ -47,6 +48,19 @@ const breadcrumbs = breadcrumbSchema([
     </div>
   </section>
 
+  {
+    sectionContent && (
+      <section class="py-8 sm:py-10 bg-white border-b border-steel-200">
+        <div class="section-container max-w-3xl">
+          <p class="text-steel-600 leading-relaxed">{sectionContent.intro}</p>
+          <p class="mt-4 text-sm text-steel-500 leading-relaxed">
+            <span class="font-semibold text-steel-700">Анализ рынка:</span> {sectionContent.competitorNotes}
+          </p>
+        </div>
+      </section>
+    )
+  }
+
   <section class="py-10 sm:py-14">
     <div class="section-container">
       {
@@ -72,8 +86,14 @@ const breadcrumbs = breadcrumbSchema([
                   </h2>
                   <p class="mt-1 text-xs text-steel-400">{product.gost}</p>
                   <div class="mt-3 flex justify-between items-center text-sm">
-                    <span class="text-steel-500">{product.weightPerMeter} кг/м</span>
-                    <span class="font-semibold text-brand">от {(product.pricePerTon / 1000).toFixed(0)} ₽/кг</span>
+                    <span class="text-steel-500">{product.weightPerMeter > 0 ? `${product.weightPerMeter} кг/м` : 'по спецификации'}</span>
+                    <span class="font-semibold text-brand">
+                      {product.pricePerUnit
+                        ? `от ${product.pricePerUnit} ₽`
+                        : product.pricePerTon > 0
+                          ? `от ${(product.pricePerTon / 1000).toFixed(0)} ₽/кг`
+                          : 'по запросу'}
+                    </span>
                   </div>
                 </MetalCard>
               ))}

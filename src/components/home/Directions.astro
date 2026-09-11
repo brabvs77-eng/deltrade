@@ -1,7 +1,17 @@
 ---
 import SectionHeading from '../ui/SectionHeading.astro';
-import MetalCard from '../ui/MetalCard.astro';
+import DirectionScroll from '../ui/DirectionScroll.astro';
 import { CATALOG_DIRECTIONS } from '../../lib/constants';
+import { getAllProducts } from '../../lib/catalog';
+
+const products = getAllProducts();
+const items = CATALOG_DIRECTIONS.map((dir) => ({
+  href: `/katalog/${dir.slug}/`,
+  title: dir.title,
+  description: dir.description,
+  slug: dir.slug,
+  count: products.filter((p) => p.section === dir.slug).length,
+}));
 ---
 
 <section class="py-14 sm:py-20 perforated-bg-light">
@@ -10,25 +20,6 @@ import { CATALOG_DIRECTIONS } from '../../lib/constants';
       title="Направления поставок"
       subtitle="Широкий ассортимент для строительных, производственных и промышленных предприятий"
     />
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-      {
-        CATALOG_DIRECTIONS.map((dir) => (
-          <MetalCard href={`/katalog/${dir.slug}/`}>
-            <div class="flex items-start gap-4">
-              <div class="flex items-center justify-center w-11 h-11 rounded-lg metal-surface metal-border text-steel-600 text-lg shrink-0" aria-hidden="true">
-                {dir.icon}
-              </div>
-              <div>
-                <h3 class="font-bold text-steel-900 group-hover:text-brand transition-colors">
-                  {dir.title}
-                </h3>
-                <p class="mt-1 text-sm text-steel-500 leading-relaxed">{dir.description}</p>
-              </div>
-            </div>
-          </MetalCard>
-        ))
-      }
-    </div>
+    <DirectionScroll items={items} showImages={true} />
   </div>
 </section>

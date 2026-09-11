@@ -1,7 +1,13 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CalcMode, Metal, Profile, SpecItem } from '../../lib/calculator/types';
 import { calculate } from '../../lib/calculator/calculate';
-import { createSpecItem, exportSpecCSV, specTotals } from '../../lib/calculator/spec';
+import {
+  createSpecItem,
+  exportSpecCSV,
+  exportSpecPrintHTML,
+  formatSpecText,
+  specTotals,
+} from '../../lib/calculator/spec';
 import metals from '../../data/metals.json';
 import profiles from '../../data/profiles.json';
 import prices from '../../data/prices.json';
@@ -14,10 +20,39 @@ const METAL_GROUPS: Record<string, string> = {
   custom: 'Другое',
 };
 
+const SPEC_STORAGE_KEY = 'deldin-calc-spec';
+const PRESET_STORAGE_KEY = 'deldin-calc-preset';
+
+const MODE_LABELS: Record<CalcMode, string> = {
+  weight: 'По размерам',
+  length: 'По весу → длина',
+  quantity: 'По весу → кол-во',
+};
+
 function formatDims(profile: Profile, dims: Record<string, number>): string {
   return profile.fields
     .map((f) => `${f.label.split(' ')[0]} ${dims[f.key]}${f.unit}`)
     .join(' × ');
+}
+
+function readPresetFromUrl(): {
+  profileId?: string;
+  metalId?: string;
+  dimensions?: Record<string, number>;
+} | null {
+  if (typeof window === 'undefined') return null;
+  const params = new URLSearchParams(window.location.search);
+  const profile = params.get('profile');
+  const metal = params.get('metal');
+  if (!profile && !metal) return null;
+  const dimensions: Record<string, number> = {};
+  params.forEach((value, key) => {
+    if (key !== 'profile' && key !== 'metal') {
+      const num = Number(value);
+      if (!Number.isNaN(num)) dimensions[key] = num;
+    }
+  });
+  return { profileId: profile ?? undefined, metalId: metal ?? undefined, dimensions };
 }
 
 export default function Calculator() {
@@ -27,8 +62,20 @@ export default function Calculator() {
   const [quantity, setQuantity] = useState(1);
   const [pricePerKg, setPricePerKg] = useState<number | ''>('');
   const [mode, setMode] = useState<CalcMode>('weight');
+  const [targetWeight, setTargetWeight] = useState(1000);
   const [spec, setSpec] = useState<SpecItem[]>([]);
   const [dims, setDims] = useState<Record<string, number>>({});
+  const [copyStatus, setCopyStatus] = useState('');
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem(PRESET_STORAGE_KEY);
+    const preset = stored ? JSON.parse(stored) : readPresetFromUrl();
+    if (!preset) return;
+    if (preset.profileId) setProfileId(preset.profileId);
+    if (preset.metalId) setMetalId(preset.metalId);
+    if (preset.dimensions) setDims(preset.dimensions);
+    sessionStorage.removeItem(PRESET_STORAGE_KEY);
+  }, []);
 
   const profile = profiles.find((p) => p.id === profileId)! as Profile;
   const metal = metals.find((m) => m.id === metalId)! as Metal;
@@ -54,11 +101,24 @@ export default function Calculator() {
           quantity,
           pricePerKg: pricePerKg === '' ? defaultPrice : pricePerKg,
           mode,
+          targetWeight: mode !== 'weight' ? targetWeight : undefined,
         },
         profile,
         metal,
       ),
-    [profileId, metalId, customDensity, dimensions, quantity, pricePerKg, defaultPrice, mode, profile, metal],
+    [
+      profileId,
+      metalId,
+      customDensity,
+      dimensions,
+      quantity,
+      pricePerKg,
+      defaultPrice,
+      mode,
+      targetWeight,
+      profile,
+      metal,
+    ],
   );
 
   const setDim = useCallback((key: string, value: number) => {
@@ -107,6 +167,32 @@ export default function Calculator() {
     URL.revokeObjectURL(url);
   };
 
+  const copySpec = async () => {
+    const text = formatSpecText(spec);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyStatus('Скопировано');
+      setTimeout(() => setCopyStatus(''), 2000);
+    } catch {
+      setCopyStatus('Ошибка копирования');
+    }
+  };
+
+  const printSpec = () => {
+    const html = exportSpecPrintHTML(spec);
+    const win = window.open('', '_blank', 'width=800,height=600');
+    if (!win) return;
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    win.print();
+  };
+
+  const sendSpecToForm = () => {
+    sessionStorage.setItem(SPEC_STORAGE_KEY, formatSpecText(spec));
+    window.location.href = '/#zayavka';
+  };
+
   const totals = specTotals(spec);
 
   const inputClass =
@@ -114,6 +200,40 @@ export default function Calculator() {
 
   return (
     <div className="space-y-6">
+      {/* Mode selector */}
+      <div>
+        <label className="block text-sm font-semibold text-steel-700 mb-2">Режим расчёта</label>
+        <div className="flex flex-wrap gap-2">
+          {(Object.keys(MODE_LABELS) as CalcMode[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all min-h-[44px] ${
+                mode === m
+                  ? 'border-brand bg-brand/5 text-brand'
+                  : 'border-steel-300 bg-white text-steel-600 hover:border-steel-400'
+              }`}
+            >
+              {MODE_LABELS[m]}
+            </button>
+          ))}
+        </div>
+        {mode !== 'weight' && (
+          <div className="mt-3 max-w-xs">
+            <label className="block text-sm font-medium text-steel-600 mb-1">Целевой вес, кг</label>
+            <input
+              type="number"
+              min={0.001}
+              step="any"
+              value={targetWeight}
+              onChange={(e) => setTargetWeight(Number(e.target.value))}
+              className={inputClass}
+            />
+          </div>
+        )}
+      </div>
+
       {/* Profile selector */}
       <div>
         <label className="block text-sm font-semibold text-steel-700 mb-2">Сортамент</label>
@@ -199,9 +319,10 @@ export default function Calculator() {
               <input
                 type="number"
                 min={1}
-                value={quantity}
+                value={mode === 'quantity' ? result.quantity : quantity}
                 onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
-                className={inputClass}
+                disabled={mode === 'quantity'}
+                className={`${inputClass} disabled:opacity-60`}
               />
             </div>
             <div>
@@ -226,6 +347,7 @@ export default function Calculator() {
             <>
               <p className="text-steel-400 text-sm mb-4">
                 {profile.name} · {metal.name}
+                {mode !== 'weight' && ` · ${MODE_LABELS[mode]}`}
               </p>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -252,11 +374,20 @@ export default function Calculator() {
                     {result.surfaceArea} <span className="text-base font-medium text-steel-400">м²</span>
                   </p>
                 </div>
+                {mode === 'length' && (
+                  <div className="col-span-2">
+                    <span className="text-steel-500 text-xs uppercase tracking-wider">Длина под вес</span>
+                    <p className="text-2xl font-bold mt-1">
+                      {result.lengthM} <span className="text-base font-medium text-steel-400">м</span>
+                    </p>
+                  </div>
+                )}
                 {result.estimatedCost !== null && (
                   <div className="col-span-2">
                     <span className="text-steel-500 text-xs uppercase tracking-wider">Ориентир стоимости</span>
                     <p className="text-3xl font-bold text-green-400 mt-1">
-                      {result.estimatedCost.toLocaleString('ru-RU')} <span className="text-base font-medium text-steel-400">₽</span>
+                      {result.estimatedCost.toLocaleString('ru-RU')}{' '}
+                      <span className="text-base font-medium text-steel-400">₽</span>
                     </p>
                     <p className="text-xs text-steel-500 mt-1">без НДС, доставки и резки</p>
                   </div>
@@ -279,18 +410,21 @@ export default function Calculator() {
       {/* Specification table */}
       {spec.length > 0 && (
         <div className="rounded-xl border border-steel-300 overflow-hidden">
-          <div className="metal-surface px-4 py-2.5 border-b border-steel-300 flex items-center justify-between">
+          <div className="metal-surface px-4 py-2.5 border-b border-steel-300 flex flex-wrap items-center justify-between gap-2">
             <span className="text-sm font-semibold text-steel-700">Спецификация ({spec.length})</span>
-            <button
-              type="button"
-              onClick={downloadCSV}
-              className="text-xs font-medium text-brand hover:underline"
-            >
-              Скачать CSV
-            </button>
+            <div className="flex flex-wrap gap-3 text-xs font-medium">
+              <button type="button" onClick={downloadCSV} className="text-brand hover:underline">
+                CSV
+              </button>
+              <button type="button" onClick={printSpec} className="text-brand hover:underline">
+                PDF / печать
+              </button>
+              <button type="button" onClick={copySpec} className="text-brand hover:underline">
+                {copyStatus || 'Копировать'}
+              </button>
+            </div>
           </div>
 
-          {/* Mobile cards */}
           <div className="sm:hidden divide-y divide-steel-200">
             {spec.map((item, i) => (
               <div key={item.id} className="p-4 space-y-1">
@@ -304,7 +438,6 @@ export default function Calculator() {
             ))}
           </div>
 
-          {/* Desktop table */}
           <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -347,12 +480,13 @@ export default function Calculator() {
           </div>
 
           <div className="p-4 border-t border-steel-200 flex flex-col sm:flex-row gap-3">
-            <a
-              href="#zayavka"
-              className="flex-1 text-center py-3 rounded-lg bg-brand text-white font-semibold hover:bg-brand-light transition-colors min-h-[44px] flex items-center justify-center"
+            <button
+              type="button"
+              onClick={sendSpecToForm}
+              className="flex-1 text-center py-3 rounded-lg bg-brand text-white font-semibold hover:bg-brand-light transition-colors min-h-[44px]"
             >
               Отправить спецификацию менеджеру
-            </a>
+            </button>
           </div>
         </div>
       )}

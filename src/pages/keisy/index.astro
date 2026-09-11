@@ -33,6 +33,20 @@ const breadcrumbs = breadcrumbSchema([
         {
           cases.map((c) => (
             <MetalCard href={`/keisy/${c.slug}/`}>
+              {
+                c.image && (
+                  <div class="aspect-[16/10] rounded-lg overflow-hidden mb-4 metal-border">
+                    <img
+                      src={c.image}
+                      alt={c.title}
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                      width="640"
+                      height="400"
+                    />
+                  </div>
+                )
+              }
               <div class="flex items-center gap-2 mb-3">
                 <span class="px-2 py-0.5 rounded text-xs font-medium bg-brand/10 text-brand">{c.industry}</span>
                 <span class="text-xs text-steel-400">{c.region} · {c.duration}</span>

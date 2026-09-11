@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import { REQUISITES, SITE } from '../../lib/constants';
+import { breadcrumbSchema } from '../../lib/seo/schema';
+
+const documents = [
+  {
+    title: 'Сертификаты качества',
+    description: 'Паспорта качества и сертификаты соответствия на металлопрокат от заводов-изготовителей.',
+  },
+  {
+    title: 'УПД и счета-фактуры',
+    description: 'Полный комплект первичных документов по каждой отгрузке. Работаем по ОСНО с НДС 22%.',
+  },
+  {
+    title: 'Электронный документооборот',
+    description: `Обмен через ЭДО (идентификатор: ${REQUISITES.edo}). Сокращаем сроки согласования и архивирования.`,
+  },
+  {
+    title: 'Договор поставки',
+    description: 'Типовой договор с юридическими лицами. Возможна работа по спецификациям и рамочным соглашениям.',
+  },
+  {
+    title: 'Транспортные документы',
+    description: 'ТТН, CMR при межрегиональной доставке. Фотоотчёт при отгрузке по запросу.',
+  },
+  {
+    title: 'Реестр закупок',
+    description: `Участие в закупках: ЕИС № ${REQUISITES.eis}. Предоставляем документы для тендерных процедур.`,
+  },
+];
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Документы', url: `${SITE.url}/dokumenty/` },
+]);
+---
+
+<BaseLayout
+  title="Документы и ЭДО"
+  description="Документооборот DELDIN TRADE: сертификаты, УПД, ЭДО, договоры поставки. Полный комплект закрывающих документов."
+  path="/dokumenty/"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+
+  <PageHero
+    title="Документы"
+    subtitle="Сертификаты, УПД, ЭДО и полный комплект закрывающих документов"
+    breadcrumb={[{ label: 'Главная', href: '/' }, { label: 'Документы' }]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container max-w-3xl">
+      <p class="text-steel-600 leading-relaxed mb-10">
+        {SITE.legalName} работает с юридическими лицами по {REQUISITES.taxation} с НДС {REQUISITES.vat}.
+        По каждой поставке предоставляем полный пакет документов и обмениваемся через электронный документооборот.
+      </p>
+
+      <div class="space-y-4">
+        {
+          documents.map((doc) => (
+            <div class="rounded-xl metal-border bg-white p-5 sm:p-6">
+              <h2 class="font-bold text-steel-900">{doc.title}</h2>
+              <p class="mt-2 text-sm text-steel-600 leading-relaxed">{doc.description}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-10 rounded-xl steel-section p-6">
+        <h2 class="text-lg font-bold text-white mb-3">Реквизиты для договора</h2>
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+          <div><dt class="text-steel-500">ИНН</dt><dd class="text-white font-medium">{REQUISITES.inn}</dd></div>
+          <div><dt class="text-steel-500">КПП</dt><dd class="text-white font-medium">{REQUISITES.kpp}</dd></div>
+          <div><dt class="text-steel-500">ОГРН</dt><dd class="text-white font-medium">{REQUISITES.ogrn}</dd></div>
+          <div><dt class="text-steel-500">Банк</dt><dd class="text-white font-medium">{REQUISITES.bank}</dd></div>
+          <div><dt class="text-steel-500">Р/с</dt><dd class="text-white font-medium">{REQUISITES.account}</dd></div>
+          <div><dt class="text-steel-500">БИК</dt><dd class="text-white font-medium">{REQUISITES.bik}</dd></div>
+        </dl>
+        <p class="mt-4 text-sm text-steel-400">
+          <a href="/kontakty/" class="text-brand-light hover:underline">Полные реквизиты на странице контактов</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <RequestFormBlock title="Запросить образцы документов" />
+</BaseLayout>

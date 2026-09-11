@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import MetalCard from '../../components/ui/MetalCard.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import { getAllIndustries } from '../../lib/industries';
+import { breadcrumbSchema } from '../../lib/seo/schema';
+import { SITE } from '../../lib/constants';
+
+const industries = getAllIndustries();
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Отрасли', url: `${SITE.url}/otrasli/` },
+]);
+---
+
+<BaseLayout
+  title="Отрасли поставок"
+  description="DELDIN TRADE — поставки металлопроката для строительства, промышленности, энергетики, инфраструктуры и нефтегаза."
+  path="/otrasli/"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+
+  <PageHero
+    title="Отрасли поставок"
+    subtitle="Комплексные поставки металлопроката и комплектующих под задачи вашей отрасли"
+    breadcrumb={[{ label: 'Главная', href: '/' }, { label: 'Отрасли' }]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {
+          industries.map((ind) => (
+            <MetalCard href={`/otrasli/${ind.slug}/`}>
+              <span class="text-3xl mb-3 block" aria-hidden="true">{ind.icon}</span>
+              <h2 class="text-lg font-bold text-steel-900 group-hover:text-brand transition-colors">{ind.title}</h2>
+              <p class="mt-2 text-sm text-steel-500 line-clamp-3">{ind.description}</p>
+            </MetalCard>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <RequestFormBlock title="Обсудить поставку для вашей отрасли" />
+</BaseLayout>

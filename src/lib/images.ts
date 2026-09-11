@@ -36,3 +36,9 @@ export function getServiceImage(slug: string): string {
 export function getProductImageAlt(title: string): string {
   return `${title} — металлопрокат DELDIN TRADE`;
 }
+
+export function getDirectionImage(slug: string, thumb = false): string {
+  const base = `/images/catalog/${slug}.webp`;
+  if (thumb) return base.replace('.webp', '-thumb.webp');
+  return base;
+}

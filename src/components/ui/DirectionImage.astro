@@ -1,0 +1,23 @@
+---
+import { getDirectionImage } from '../../lib/images';
+
+interface Props {
+  slug: string;
+  title: string;
+  thumb?: boolean;
+  class?: string;
+}
+
+const { slug, title, thumb = false, class: className = '' } = Astro.props;
+const src = getDirectionImage(slug, thumb);
+---
+
+<img
+  src={src}
+  alt={`${title} — каталог DELDIN TRADE`}
+  width={thumb ? 400 : 800}
+  height={thumb ? 250 : 500}
+  loading="lazy"
+  decoding="async"
+  class={`w-full h-full object-cover ${className}`}
+/>

@@ -18,6 +18,7 @@ const articleSchema = {
   '@type': 'Article',
   headline: caseStudy.title,
   description: caseStudy.task,
+  image: caseStudy.image ? `${SITE.url}${caseStudy.image}` : undefined,
   author: { '@type': 'Organization', name: SITE.legalName },
 };
 
@@ -48,6 +49,21 @@ const breadcrumbs = breadcrumbSchema([
 
   <section class="py-10 sm:py-14">
     <div class="section-container max-w-3xl">
+      {
+        caseStudy.image && (
+          <div class="aspect-[16/10] rounded-xl overflow-hidden metal-border mb-8">
+            <img
+              src={caseStudy.image}
+              alt={caseStudy.title}
+              class="w-full h-full object-cover"
+              loading="eager"
+              width="960"
+              height="600"
+            />
+          </div>
+        )
+      }
+
       <div class="space-y-8">
         <div>
           <h2 class="text-lg font-bold text-steel-900 mb-2">Задача</h2>
