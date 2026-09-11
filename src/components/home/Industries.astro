@@ -1,0 +1,30 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import MetalCard from '../ui/MetalCard.astro';
+import industries from '../../data/industries.json';
+---
+
+<section class="py-14 sm:py-20 bg-white">
+  <div class="section-container">
+    <SectionHeading
+      title="Отрасли"
+      subtitle="Работаем с предприятиями строительной, производственной и промышленной сфер"
+    />
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {
+        industries.map((ind) => (
+          <MetalCard>
+            <div class="flex items-start gap-3">
+              <span class="text-2xl" aria-hidden="true">{ind.icon}</span>
+              <div>
+                <h3 class="font-bold text-steel-900">{ind.title}</h3>
+                <p class="mt-1 text-sm text-steel-500 leading-relaxed">{ind.description}</p>
+              </div>
+            </div>
+          </MetalCard>
+        ))
+      }
+    </div>
+  </div>
+</section>

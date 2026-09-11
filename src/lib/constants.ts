@@ -16,6 +16,7 @@ export const NAV_LINKS = [
   { href: '/katalog/', label: 'Каталог' },
   { href: '/uslugi/', label: 'Услуги' },
   { href: '/kalkulyator-metalla/', label: 'Калькулятор' },
+  { href: '/keisy/', label: 'Кейсы' },
   { href: '/o-kompanii/', label: 'О компании' },
   { href: '/kontakty/', label: 'Контакты' },
 ] as const;

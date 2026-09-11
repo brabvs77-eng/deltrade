@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+---
+
+<BaseLayout title="Страница не найдена" noindex={true} showMobileCTA={false}>
+  <section class="py-20 sm:py-32 text-center">
+    <div class="section-container">
+      <p class="text-6xl sm:text-8xl font-extrabold text-steel-300">404</p>
+      <h1 class="mt-4 text-2xl sm:text-3xl font-bold text-steel-900">Страница не найдена</h1>
+      <p class="mt-3 text-steel-500 max-w-md mx-auto">Запрашиваемая страница не существует или была перемещена.</p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <Button href="/" variant="primary" size="lg">На главную</Button>
+        <Button href="/katalog/" variant="outline" size="lg">В каталог</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

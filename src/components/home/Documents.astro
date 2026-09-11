@@ -1,0 +1,33 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+
+const docs = [
+  { title: 'Сертификаты качества', desc: 'Паспорта и сертификаты завода-изготовителя на каждую поставку' },
+  { title: 'Закрывающие документы', desc: 'УПД, счета-фактуры, товарные накладные' },
+  { title: 'ЭДО', desc: 'Обмен документами через систему электронного документооборота' },
+  { title: 'Договор поставки', desc: 'Работаем по договору с юридическими лицами' },
+];
+---
+
+<section class="py-14 sm:py-20 perforated-bg-light">
+  <div class="section-container">
+    <SectionHeading
+      title="Документы"
+      subtitle="Полный комплект сопроводительной документации на каждую поставку"
+    />
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+      {
+        docs.map((doc) => (
+          <div class="flex items-start gap-3 p-5 rounded-xl metal-border bg-white">
+            <div class="rivet shrink-0 mt-1" aria-hidden="true"></div>
+            <div>
+              <h3 class="font-bold text-steel-900">{doc.title}</h3>
+              <p class="mt-1 text-sm text-steel-500">{doc.desc}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,42 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import MetalCard from '../ui/MetalCard.astro';
+import Button from '../ui/Button.astro';
+import { getAllCases } from '../../lib/cases';
+
+const cases = getAllCases().slice(0, 3);
+---
+
+<section class="py-14 sm:py-20 perforated-bg-light">
+  <div class="section-container">
+    <SectionHeading
+      title="Реализованные поставки"
+      subtitle="Реальные кейсы: задача, решение, номенклатура и срок"
+    />
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {
+        cases.map((caseItem) => (
+          <MetalCard href={`/keisy/${caseItem.slug}/`}>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="px-2 py-0.5 rounded text-xs font-medium bg-brand/10 text-brand">{caseItem.industry}</span>
+              <span class="text-xs text-steel-400">{caseItem.region}</span>
+            </div>
+            <h3 class="font-bold text-steel-900 group-hover:text-brand transition-colors leading-snug">
+              {caseItem.title}
+            </h3>
+            <p class="mt-2 text-sm text-steel-500 line-clamp-3">{caseItem.task}</p>
+            <div class="mt-4 flex items-center justify-between text-xs text-steel-400">
+              <span>{caseItem.duration}</span>
+              <span class="text-brand font-medium group-hover:underline">Подробнее →</span>
+            </div>
+          </MetalCard>
+        ))
+      }
+    </div>
+
+    <div class="mt-8 text-center">
+      <Button href="/keisy/" variant="outline">Все кейсы</Button>
+    </div>
+  </div>
+</section>

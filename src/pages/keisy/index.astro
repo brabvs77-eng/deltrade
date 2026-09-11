@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import MetalCard from '../../components/ui/MetalCard.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import { getAllCases } from '../../lib/cases';
+import { breadcrumbSchema } from '../../lib/seo/schema';
+import { SITE } from '../../lib/constants';
+
+const cases = getAllCases();
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Кейсы', url: `${SITE.url}/keisy/` },
+]);
+---
+
+<BaseLayout
+  title="Реализованные поставки"
+  description="Кейсы DELDIN TRADE: реальные поставки металлопроката для строительства и промышленности."
+  path="/keisy/"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+
+  <PageHero
+    title="Реализованные поставки"
+    subtitle="Задача, решение, номенклатура, география и срок"
+    breadcrumb={[{ label: 'Главная', href: '/' }, { label: 'Кейсы' }]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {
+          cases.map((c) => (
+            <MetalCard href={`/keisy/${c.slug}/`}>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="px-2 py-0.5 rounded text-xs font-medium bg-brand/10 text-brand">{c.industry}</span>
+                <span class="text-xs text-steel-400">{c.region} · {c.duration}</span>
+              </div>
+              <h2 class="text-lg font-bold text-steel-900 group-hover:text-brand transition-colors">{c.title}</h2>
+              <p class="mt-2 text-sm text-steel-500 line-clamp-2">{c.task}</p>
+            </MetalCard>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <RequestFormBlock title="Обсудить ваш проект" />
+</BaseLayout>

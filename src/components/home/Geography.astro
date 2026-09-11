@@ -1,0 +1,56 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import regions from '../../data/regions.json';
+---
+
+<section class="py-14 sm:py-20 bg-white">
+  <div class="section-container">
+    <SectionHeading
+      title="География поставок"
+      subtitle="Доставляем металлопрокат и материалы по всей России"
+    />
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div class="rounded-xl steel-section p-6 sm:p-8 relative overflow-hidden">
+        <div class="absolute inset-0 diamond-plate opacity-20" aria-hidden="true"></div>
+        <div class="relative">
+          <p class="text-steel-400 text-sm mb-4">Ключевые регионы</p>
+          <div class="flex flex-wrap gap-2">
+            {
+              regions.map((r) => (
+                <span
+                  class={`px-3 py-1.5 rounded-full text-sm ${
+                    r.highlight
+                      ? 'bg-brand/20 text-green-300 font-medium border border-brand/30'
+                      : 'bg-steel-800 text-steel-300 border border-steel-700'
+                  }`}
+                >
+                  {r.name}
+                </span>
+              ))
+            }
+          </div>
+          <p class="mt-6 text-steel-400 text-sm">
+            + доставка в любой регион России через транспортные компании
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        {
+          [
+            { label: 'Доставка', value: 'По всей России' },
+            { label: 'Транспорт', value: 'Собственный + ТК' },
+            { label: 'Сроки', value: 'По согласованию' },
+            { label: 'Документы', value: 'ТТН, УПД, ЭДО' },
+          ].map((item) => (
+            <div class="flex items-center justify-between p-4 rounded-xl metal-border bg-surface">
+              <span class="text-steel-500 text-sm">{item.label}</span>
+              <span class="font-semibold text-steel-900">{item.value}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

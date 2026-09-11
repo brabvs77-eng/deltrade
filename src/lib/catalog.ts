@@ -52,6 +52,7 @@ export const SUBSECTIONS: Record<string, { slug: string; title: string }[]> = {
     { slug: 'dvutavr', title: 'Двутавр' },
     { slug: 'krug', title: 'Круг' },
     { slug: 'polosa', title: 'Полоса' },
+    { slug: 'shestigrannik', title: 'Шестигранник' },
   ],
 };
 

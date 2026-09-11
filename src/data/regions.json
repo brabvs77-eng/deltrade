@@ -1,0 +1,14 @@
+[
+  { "name": "Москва и МО", "highlight": true },
+  { "name": "Санкт-Петербург и ЛО", "highlight": true },
+  { "name": "Татарстан", "highlight": false },
+  { "name": "Краснодарский край", "highlight": false },
+  { "name": "Свердловская область", "highlight": false },
+  { "name": "Новосибирская область", "highlight": false },
+  { "name": "Ростовская область", "highlight": false },
+  { "name": "Самарская область", "highlight": false },
+  { "name": "Нижегородская область", "highlight": false },
+  { "name": "Пермский край", "highlight": false },
+  { "name": "Воронежская область", "highlight": false },
+  { "name": "Красноярский край", "highlight": false }
+]

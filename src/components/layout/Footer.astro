@@ -25,7 +25,7 @@ const year = new Date().getFullYear();
       <div>
         <h3 class="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Навигация</h3>
         <ul class="space-y-2">
-          {NAV_LINKS.map((link) => (
+          {[...NAV_LINKS, { href: '/keisy/', label: 'Кейсы' }].filter((l, i, arr) => arr.findIndex(x => x.href === l.href) === i).map((link) => (
             <li>
               <a href={link.href} class="text-sm hover:text-white transition-colors">{link.label}</a>
             </li>

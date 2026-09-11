@@ -1,0 +1,25 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import partners from '../../data/partners.json';
+---
+
+<section class="py-14 sm:py-20 bg-white">
+  <div class="section-container">
+    <SectionHeading
+      title="Партнёры"
+      subtitle="Работаем с ведущими производителями и логистическими компаниями"
+      align="center"
+    />
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
+      {
+        partners.map((partner) => (
+          <div class="flex flex-col items-center justify-center p-4 sm:p-5 rounded-xl metal-border bg-surface text-center min-h-[80px]">
+            <span class="font-bold text-steel-800 text-sm sm:text-base">{partner.name}</span>
+            <span class="mt-1 text-xs text-steel-400">{partner.category}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
