@@ -1,0 +1,37 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import Button from '../ui/Button.astro';
+---
+
+<section class="py-14 sm:py-20">
+  <div class="section-container">
+    <div class="relative rounded-2xl steel-section overflow-hidden">
+      <div class="absolute inset-0 diamond-plate opacity-30" aria-hidden="true"></div>
+      <div class="relative p-8 sm:p-12 lg:p-16">
+        <SectionHeading
+          title="Закроем комплексную заявку по одному обращению"
+          subtitle="Многопозиционные и нестандартные заказы — одна спецификация, один менеджер, полный комплект документов."
+          dark
+        />
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 max-w-2xl">
+          {[
+            'Поиск по заявке или спецификации',
+            'Комплектация редких позиций',
+            'Металлообработка через партнёров',
+            'Доставка и документы под ключ',
+          ].map((item) => (
+            <li class="flex items-center gap-2 text-steel-300 text-sm sm:text-base">
+              <svg class="w-5 h-5 text-brand-light shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+              {item}
+            </li>
+          ))}
+        </ul>
+        <Button href="#zayavka" variant="primary" size="lg">
+          Отправить комплексную заявку
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>

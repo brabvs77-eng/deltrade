@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import Directions from '../components/home/Directions.astro';
+import ComplexOrder from '../components/home/ComplexOrder.astro';
+import HowWeWork from '../components/home/HowWeWork.astro';
+import Services from '../components/home/Services.astro';
+import CalculatorTeaser from '../components/home/CalculatorTeaser.astro';
+import RequestForm from '../components/home/RequestForm.astro';
+import Contacts from '../components/home/Contacts.astro';
+import { SITE } from '../lib/constants';
+---
+
+<BaseLayout
+  title="Комплексные поставки металлопроката"
+  description={SITE.description}
+  path="/"
+>
+  <Hero />
+  <Directions />
+  <ComplexOrder />
+  <HowWeWork />
+  <Services />
+  <CalculatorTeaser />
+  <RequestForm />
+  <Contacts />
+</BaseLayout>

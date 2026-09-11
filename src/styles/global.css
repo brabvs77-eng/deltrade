@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #14452f;
+  --color-brand-light: #1a5c3d;
+  --color-brand-dark: #0d2e1f;
+  --color-surface: #f5f5f5;
+  --color-surface-warm: #eceae6;
+  --color-steel-900: #121212;
+  --color-steel-800: #1e1e1e;
+  --color-steel-700: #2a2a2a;
+  --color-steel-600: #3d3d3d;
+  --color-steel-500: #5c5c5c;
+  --color-steel-400: #8a8a8a;
+  --color-steel-300: #b0b0b0;
+  --color-steel-200: #d4d4d4;
+  --color-steel-100: #e8e8e8;
+  --color-chrome: #c8cdd3;
+  --color-chrome-shine: #f0f4f8;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-surface text-steel-900 font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand/20 text-brand-dark;
+  }
+}
+
+/* ── Brushed metal surface ── */
+.metal-surface {
+  background:
+    linear-gradient(
+      135deg,
+      var(--color-steel-200) 0%,
+      var(--color-chrome) 25%,
+      var(--color-steel-300) 50%,
+      var(--color-chrome-shine) 75%,
+      var(--color-steel-200) 100%
+    );
+  background-size: 200% 200%;
+}
+
+.metal-surface-dark {
+  background:
+    linear-gradient(
+      160deg,
+      var(--color-steel-800) 0%,
+      var(--color-steel-700) 30%,
+      var(--color-steel-600) 50%,
+      var(--color-steel-700) 70%,
+      var(--color-steel-800) 100%
+    );
+}
+
+/* ── Beveled metal border ── */
+.metal-border {
+  border: 1px solid var(--color-steel-300);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.metal-border-dark {
+  border: 1px solid var(--color-steel-600);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Perforated sheet metal pattern ── */
+.perforated-bg {
+  background-color: var(--color-steel-800);
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.06) 1px,
+    transparent 1px
+  );
+  background-size: 8px 8px;
+}
+
+.perforated-bg-light {
+  background-color: var(--color-surface-warm);
+  background-image: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.04) 1px,
+    transparent 1px
+  );
+  background-size: 6px 6px;
+}
+
+/* ── Diamond plate / рифлёный лист ── */
+.diamond-plate {
+  background-color: var(--color-steel-700);
+  background-image:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.03) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.03) 75%);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    0 10px,
+    10px -10px,
+    -10px 0;
+}
+
+/* ── Chrome shine line ── */
+.chrome-line {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-chrome) 20%,
+    var(--color-chrome-shine) 50%,
+    var(--color-chrome) 80%,
+    transparent 100%
+  );
+}
+
+/* ── Rivet decoration ── */
+.rivet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    var(--color-chrome-shine),
+    var(--color-steel-400) 60%,
+    var(--color-steel-600)
+  );
+  box-shadow:
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+/* ── Steel section with green accent edge ── */
+.steel-section {
+  @apply relative overflow-hidden;
+  background: linear-gradient(
+    180deg,
+    var(--color-steel-900) 0%,
+    var(--color-steel-800) 100%
+  );
+}
+
+.steel-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-dark),
+    var(--color-brand),
+    var(--color-brand-light),
+    var(--color-brand)
+  );
+}
+
+/* ── Weld seam accent ── */
+.weld-seam {
+  position: relative;
+}
+
+.weld-seam::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(20, 69, 47, 0.4) 30%,
+    rgba(20, 69, 47, 0.6) 50%,
+    rgba(20, 69, 47, 0.4) 70%,
+    transparent
+  );
+  border-radius: 1px;
+}
+
+/* ── Section container ── */
+.section-container {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+}
+
+/* ── Sticky mobile CTA offset ── */
+.has-mobile-cta {
+  padding-bottom: 4.5rem;
+}
+
+@media (min-width: 768px) {
+  .has-mobile-cta {
+    padding-bottom: 0;
+  }
+}

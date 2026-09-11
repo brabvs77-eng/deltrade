@@ -1,0 +1,14 @@
+---
+interface Props {
+  label?: string;
+}
+const { label } = Astro.props;
+---
+
+<div class="flex items-center gap-4 my-8" aria-hidden="true">
+  <div class="rivet shrink-0"></div>
+  <div class="chrome-line flex-1"></div>
+  {label && <span class="text-xs uppercase tracking-widest text-steel-400 font-medium">{label}</span>}
+  <div class="chrome-line flex-1"></div>
+  <div class="rivet shrink-0"></div>
+</div>

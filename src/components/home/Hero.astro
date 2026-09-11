@@ -1,0 +1,50 @@
+---
+import Button from '../ui/Button.astro';
+---
+
+<section class="relative overflow-hidden steel-section">
+  <!-- Diamond plate overlay -->
+  <div class="absolute inset-0 diamond-plate opacity-40" aria-hidden="true"></div>
+
+  <!-- Metallic shine accent -->
+  <div class="absolute top-0 right-0 w-1/2 h-full opacity-10" aria-hidden="true"
+    style="background: linear-gradient(135deg, transparent 40%, rgba(200,205,211,0.3) 50%, transparent 60%);"
+  ></div>
+
+  <div class="section-container relative py-16 sm:py-20 lg:py-28">
+    <div class="max-w-3xl">
+      <!-- Rivet accent row -->
+      <div class="flex items-center gap-2 mb-6" aria-hidden="true">
+        <div class="rivet"></div>
+        <div class="rivet"></div>
+        <div class="rivet"></div>
+        <div class="h-px flex-1 max-w-24 bg-gradient-to-r from-steel-600 to-transparent"></div>
+        <span class="text-xs uppercase tracking-[0.2em] text-steel-500 font-medium">B2B-поставщик</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-extrabold text-white leading-[1.1] tracking-tight">
+        Комплексные поставки металлопроката и&nbsp;материалов для строительства и&nbsp;промышленности
+      </h1>
+
+      <p class="mt-5 sm:mt-6 text-base sm:text-lg text-steel-300 leading-relaxed max-w-2xl">
+        Подберём продукцию по спецификации, найдём редкие и непрофильные позиции,
+        организуем обработку и доставим на объект по России.
+      </p>
+
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <Button href="#zayavka" variant="primary" size="lg" class="w-full sm:w-auto">
+          Отправить заявку
+        </Button>
+        <Button href="#zayavka" variant="metal" size="lg" class="w-full sm:w-auto">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+          Загрузить спецификацию
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom chrome line -->
+  <div class="chrome-line" aria-hidden="true"></div>
+</section>

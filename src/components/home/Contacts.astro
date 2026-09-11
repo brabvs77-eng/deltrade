@@ -1,0 +1,28 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import { SITE } from '../../lib/constants';
+---
+
+<section class="py-14 sm:py-20 bg-white">
+  <div class="section-container">
+    <SectionHeading title="Контакты" align="center" />
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+      <div class="text-center p-6 rounded-xl metal-border bg-surface">
+        <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
+        <h3 class="font-semibold text-steel-900 text-sm">Телефон</h3>
+        <a href={SITE.phoneHref} class="mt-2 block text-brand font-medium hover:underline">{SITE.phone}</a>
+      </div>
+      <div class="text-center p-6 rounded-xl metal-border bg-surface">
+        <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
+        <h3 class="font-semibold text-steel-900 text-sm">Email</h3>
+        <a href={`mailto:${SITE.email}`} class="mt-2 block text-brand font-medium hover:underline">{SITE.email}</a>
+      </div>
+      <div class="text-center p-6 rounded-xl metal-border bg-surface">
+        <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
+        <h3 class="font-semibold text-steel-900 text-sm">Режим работы</h3>
+        <p class="mt-2 text-steel-600">{SITE.workHours}</p>
+      </div>
+    </div>
+  </div>
+</section>
