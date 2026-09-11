@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import { SITE } from '../../lib/constants';
+import { breadcrumbSchema, localBusinessSchema } from '../../lib/seo/schema';
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Контакты', url: `${SITE.url}/kontakty/` },
+]);
+---
+
+<BaseLayout
+  title="Контакты"
+  description={`Контакты DELDIN TRADE: ${SITE.phone}, ${SITE.email}. ${SITE.workHours}.`}
+  path="/kontakty/"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+  <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema())} />
+
+  <PageHero
+    title="Контакты"
+    subtitle="Свяжитесь с нами удобным способом — ответим в рабочее время"
+    breadcrumb={[{ label: 'Главная', href: '/' }, { label: 'Контакты' }]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <div class="p-6 rounded-xl metal-border bg-white text-center">
+          <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
+          <h2 class="font-semibold text-steel-900 text-sm">Телефон</h2>
+          <a href={SITE.phoneHref} class="mt-2 block text-brand font-medium text-lg hover:underline">{SITE.phone}</a>
+        </div>
+        <div class="p-6 rounded-xl metal-border bg-white text-center">
+          <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
+          <h2 class="font-semibold text-steel-900 text-sm">Email</h2>
+          <a href={`mailto:${SITE.email}`} class="mt-2 block text-brand font-medium hover:underline break-all">{SITE.email}</a>
+        </div>
+        <div class="p-6 rounded-xl metal-border bg-white text-center">
+          <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
+          <h2 class="font-semibold text-steel-900 text-sm">Адрес</h2>
+          <p class="mt-2 text-steel-600">{SITE.address}</p>
+        </div>
+        <div class="p-6 rounded-xl metal-border bg-white text-center">
+          <div class="rivet mx-auto mb-3" aria-hidden="true"></div>
+          <h2 class="font-semibold text-steel-900 text-sm">Режим работы</h2>
+          <p class="mt-2 text-steel-600">{SITE.workHours}</p>
+        </div>
+      </div>
+
+      <div class="rounded-xl steel-section p-6 sm:p-8 max-w-2xl">
+        <h2 class="text-lg font-bold text-white">Быстрый способ получить расчёт</h2>
+        <p class="mt-2 text-steel-300 text-sm leading-relaxed">
+          Отправьте спецификацию на {SITE.email} или позвоните {SITE.phone}.
+          Менеджер проверит позиции и подготовит коммерческое предложение.
+        </p>
+        <div class="mt-4 flex flex-col sm:flex-row gap-3">
+          <a href={`mailto:${SITE.email}`}
+            class="inline-flex items-center justify-center px-6 py-3 bg-brand text-white font-semibold rounded-lg hover:bg-brand-light transition-colors min-h-[44px]">
+            Написать на email
+          </a>
+          <a href={SITE.phoneHref}
+            class="inline-flex items-center justify-center px-6 py-3 metal-surface metal-border text-steel-800 font-semibold rounded-lg hover:brightness-105 transition-all min-h-[44px]">
+            Позвонить
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <RequestFormBlock title="Оставить заявку" />
+</BaseLayout>

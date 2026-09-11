@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import SectionHeading from '../../components/ui/SectionHeading.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import { SITE, WORK_STEPS } from '../../lib/constants';
+import { breadcrumbSchema } from '../../lib/seo/schema';
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'О компании', url: `${SITE.url}/o-kompanii/` },
+]);
+---
+
+<BaseLayout
+  title="О компании"
+  description="ООО «ДЕЛДИН ТРЕЙД» — металлотрейдер и комплексный B2B-поставщик. Поставки металлопроката и материалов для строительства и промышленности."
+  path="/o-kompanii/"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+
+  <PageHero
+    title="О компании"
+    subtitle="Металлотрейдер и комплексный поставщик для строительных, производственных и промышленных предприятий"
+    breadcrumb={[{ label: 'Главная', href: '/' }, { label: 'О компании' }]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container max-w-3xl">
+      <div class="prose-steel space-y-4 text-steel-600 leading-relaxed">
+        <p>
+          <strong class="text-steel-900">{SITE.legalName}</strong> — металлотрейдер и комплексный B2B-поставщик.
+          Мы не завод и не розничный магазин. Наша задача — закрыть потребность клиента под ключ:
+          найти, проверить, скомплектовать, обработать при необходимости и доставить продукцию в нужный срок.
+        </p>
+        <p>
+          Покупатель приходит к нам не за одной стандартной позицией, а за решением задачи.
+          Работаем с юридическими лицами, понимаем требования строительных и промышленных объектов.
+        </p>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {
+          [
+            { label: 'Направлений поставок', value: '10+' },
+            { label: 'Регионов доставки', value: 'Россия' },
+            { label: 'Документы', value: 'ЭДО' },
+          ].map((stat) => (
+            <div class="text-center p-6 rounded-xl metal-border bg-white">
+              <p class="text-2xl sm:text-3xl font-extrabold text-brand">{stat.value}</p>
+              <p class="mt-1 text-sm text-steel-500">{stat.label}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="py-10 sm:py-14 perforated-bg-light">
+    <div class="section-container">
+      <SectionHeading title="Что мы делаем" subtitle="Комплексный подход к каждой заявке" />
+      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-3xl">
+        {
+          [
+            'Поиск продукции по заявке или спецификации',
+            'Комплектация многопозиционных заявок',
+            'Поставка редких и непрофильных позиций',
+            'Металлообработка через проверенных партнёров',
+            'Организация доставки по России',
+            'Один менеджер и полный комплект документов',
+          ].map((item) => (
+            <li class="flex items-center gap-2 text-steel-600 text-sm sm:text-base">
+              <svg class="w-5 h-5 text-brand shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="py-10 sm:py-14 bg-white">
+    <div class="section-container">
+      <SectionHeading title="Как мы работаем" align="center" />
+      <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        {
+          WORK_STEPS.map((step) => (
+            <li class="p-5 rounded-xl metal-border bg-surface">
+              <span class="flex items-center justify-center w-8 h-8 rounded-full metal-surface metal-border text-steel-700 font-bold text-sm mb-3">
+                {step.step}
+              </span>
+              <h3 class="font-bold text-steel-900">{step.title}</h3>
+              <p class="mt-1 text-sm text-steel-500">{step.description}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <RequestFormBlock />
+</BaseLayout>

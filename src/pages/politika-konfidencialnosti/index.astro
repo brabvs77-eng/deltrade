@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import { SITE } from '../../lib/constants';
+---
+
+<BaseLayout
+  title="Политика конфиденциальности"
+  description="Политика обработки персональных данных ООО «ДЕЛДИН ТРЕЙД»."
+  path="/politika-konfidencialnosti/"
+  noindex={true}
+>
+
+  <PageHero
+    title="Политика конфиденциальности"
+    breadcrumb={[
+      { label: 'Главная', href: '/' },
+      { label: 'Политика конфиденциальности' },
+    ]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container max-w-3xl text-steel-600 leading-relaxed space-y-4 text-sm sm:text-base">
+      <p>Настоящая Политика конфиденциальности определяет порядок обработки и защиты персональных данных пользователей сайта {SITE.url} (далее — Сайт), принадлежащего {SITE.legalName} (далее — Оператор).</p>
+
+      <h2 class="text-lg font-bold text-steel-900 pt-4">1. Какие данные мы собираем</h2>
+      <p>При заполнении формы заявки на Сайте мы можем получать: имя, номер телефона, адрес электронной почты, текст сообщения и прикреплённые файлы (спецификации).</p>
+
+      <h2 class="text-lg font-bold text-steel-900 pt-4">2. Цели обработки</h2>
+      <p>Персональные данные обрабатываются для связи с пользователем, подготовки коммерческого предложения и исполнения договорных обязательств.</p>
+
+      <h2 class="text-lg font-bold text-steel-900 pt-4">3. Передача данных третьим лицам</h2>
+      <p>Оператор не передаёт персональные данные третьим лицам, за исключением случаев, предусмотренных законодательством РФ.</p>
+
+      <h2 class="text-lg font-bold text-steel-900 pt-4">4. Защита данных</h2>
+      <p>Оператор принимает необходимые организационные и технические меры для защиты персональных данных от неправомерного доступа.</p>
+
+      <h2 class="text-lg font-bold text-steel-900 pt-4">5. Контакты</h2>
+      <p>По вопросам обработки персональных данных: <a href={`mailto:${SITE.email}`} class="text-brand hover:underline">{SITE.email}</a></p>
+    </div>
+  </section>
+</BaseLayout>

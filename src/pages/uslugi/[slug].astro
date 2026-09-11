@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import Button from '../../components/ui/Button.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import { getAllServices } from '../../lib/services';
+import { breadcrumbSchema } from '../../lib/seo/schema';
+import { SITE } from '../../lib/constants';
+
+export function getStaticPaths() {
+  return getAllServices().map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.title,
+  description: service.description,
+  provider: { '@type': 'Organization', name: SITE.legalName, url: SITE.url },
+};
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Услуги', url: `${SITE.url}/uslugi/` },
+  { name: service.title, url: `${SITE.url}/uslugi/${service.slug}/` },
+]);
+---
+
+<BaseLayout
+  title={service.title}
+  description={service.shortDescription}
+  path={`/uslugi/${service.slug}/`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+
+  <PageHero
+    title={service.title}
+    subtitle={service.shortDescription}
+    breadcrumb={[
+      { label: 'Главная', href: '/' },
+      { label: 'Услуги', href: '/uslugi/' },
+      { label: service.title },
+    ]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container max-w-3xl">
+      <p class="text-steel-600 leading-relaxed text-base sm:text-lg">{service.description}</p>
+
+      <h2 class="mt-10 text-xl font-bold text-steel-900">Что входит в услугу</h2>
+      <ul class="mt-4 space-y-2">
+        {
+          service.features.map((f) => (
+            <li class="flex items-start gap-2 text-steel-600">
+              <svg class="w-5 h-5 text-brand shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+              {f}
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mt-10 rounded-xl steel-section p-6 sm:p-8">
+        <h2 class="text-lg font-bold text-white">Как заказать</h2>
+        <p class="mt-2 text-steel-300 leading-relaxed">{service.process}</p>
+        <Button href="#zayavka" variant="primary" size="lg" class="mt-5">
+          Отправить заявку
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <RequestFormBlock />
+</BaseLayout>

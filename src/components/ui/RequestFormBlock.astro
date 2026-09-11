@@ -1,0 +1,113 @@
+---
+import { SITE } from '../../lib/constants';
+
+interface Props {
+  id?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+const { id = 'zayavka', title = 'Отправить заявку', subtitle = 'Опишите задачу или приложите спецификацию — менеджер свяжется с вами в рабочее время' } = Astro.props;
+---
+
+<section class="py-14 sm:py-20 perforated-bg-light" id={id}>
+  <div class="section-container">
+    <div class="mb-8 max-w-2xl">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="rivet shrink-0" aria-hidden="true"></div>
+        <div class="h-px flex-1 max-w-16 bg-steel-300" aria-hidden="true"></div>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-bold text-steel-900">{title}</h2>
+      <p class="mt-3 text-steel-500">{subtitle}</p>
+    </div>
+
+    <form
+      id="request-form"
+      class="max-w-xl mx-auto rounded-2xl bg-white metal-border p-6 sm:p-8 space-y-4"
+      enctype="multipart/form-data"
+    >
+      <div id="form-status" class="hidden rounded-lg p-3 text-sm" role="alert"></div>
+
+      <div>
+        <label for="req-name" class="block text-sm font-medium text-steel-700 mb-1.5">Имя *</label>
+        <input type="text" id="req-name" name="name" required autocomplete="name"
+          class="w-full px-4 py-3 rounded-lg metal-border bg-surface text-steel-900 text-base min-h-[44px] focus:outline-2 focus:outline-brand"
+          placeholder="Иван Иванов" />
+      </div>
+
+      <div>
+        <label for="req-phone" class="block text-sm font-medium text-steel-700 mb-1.5">Телефон *</label>
+        <input type="tel" id="req-phone" name="phone" required autocomplete="tel"
+          class="w-full px-4 py-3 rounded-lg metal-border bg-surface text-steel-900 text-base min-h-[44px] focus:outline-2 focus:outline-brand"
+          placeholder="+7 (___) ___-__-__" />
+      </div>
+
+      <div>
+        <label for="req-email" class="block text-sm font-medium text-steel-700 mb-1.5">Email</label>
+        <input type="email" id="req-email" name="email" autocomplete="email"
+          class="w-full px-4 py-3 rounded-lg metal-border bg-surface text-steel-900 text-base min-h-[44px] focus:outline-2 focus:outline-brand"
+          placeholder="info@company.ru" />
+      </div>
+
+      <div>
+        <label for="req-message" class="block text-sm font-medium text-steel-700 mb-1.5">Комментарий</label>
+        <textarea id="req-message" name="message" rows="3"
+          class="w-full px-4 py-3 rounded-lg metal-border bg-surface text-steel-900 text-base focus:outline-2 focus:outline-brand resize-y"
+          placeholder="Опишите задачу или перечислите позиции"></textarea>
+      </div>
+
+      <div>
+        <label for="req-file" class="block text-sm font-medium text-steel-700 mb-1.5">Спецификация (файл)</label>
+        <input type="file" id="req-file" name="file" accept=".pdf,.xlsx,.xls,.doc,.docx,.csv"
+          class="w-full text-sm text-steel-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:metal-surface file:metal-border file:text-steel-700 file:font-medium file:cursor-pointer" />
+        <p class="mt-1 text-xs text-steel-400">PDF, Excel, Word, CSV — до 10 МБ</p>
+      </div>
+
+      <button type="submit" id="form-submit-btn"
+        class="w-full inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-brand text-white rounded-lg hover:bg-brand-light active:bg-brand-dark transition-colors min-h-[52px] shadow-md shadow-brand/20 disabled:opacity-50">
+        Отправить заявку
+      </button>
+
+      <p class="text-xs text-steel-400 text-center leading-relaxed">
+        Нажимая кнопку, вы соглашаетесь с
+        <a href="/politika-konfidencialnosti/" class="text-brand hover:underline">политикой конфиденциальности</a>
+      </p>
+    </form>
+
+    <div class="mt-8 text-center text-sm text-steel-500">
+      или позвоните: <a href={SITE.phoneHref} class="text-brand font-medium hover:underline">{SITE.phone}</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('request-form') as HTMLFormElement;
+  const status = document.getElementById('form-status') as HTMLDivElement;
+  const btn = document.getElementById('form-submit-btn') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Отправка...';
+    status.className = 'hidden';
+
+    try {
+      const res = await fetch('/api/request', { method: 'POST', body: new FormData(form) });
+      const data = await res.json();
+
+      if (res.ok) {
+        status.className = 'rounded-lg p-3 text-sm bg-green-50 text-green-800 border border-green-200';
+        status.textContent = data.message || 'Заявка отправлена! Менеджер свяжется с вами.';
+        form.reset();
+      } else {
+        throw new Error(data.error || 'Ошибка отправки');
+      }
+    } catch (err) {
+      status.className = 'rounded-lg p-3 text-sm bg-red-50 text-red-800 border border-red-200';
+      status.textContent = err instanceof Error ? err.message : 'Не удалось отправить заявку. Позвоните нам.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Отправить заявку';
+    }
+  });
+</script>

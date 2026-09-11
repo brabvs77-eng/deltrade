@@ -17,6 +17,23 @@ npm run build    # production build
 npm run preview  # preview build
 ```
 
+## Деплой (Cloudflare Pages)
+
+| Параметр | Значение |
+|---|---|
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| `NODE_VERSION` | `22` |
+
+### Переменные окружения (формы → Telegram)
+
+| Переменная | Описание |
+|---|---|
+| `TELEGRAM_BOT_TOKEN` | Токен бота Telegram |
+| `TELEGRAM_CHAT_ID` | ID чата для уведомлений |
+
+Без этих переменных форма вернёт успех, но уведомление запишется в лог.
+
 ## Бренд
 
 | Цвет | HEX |
