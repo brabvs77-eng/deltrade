@@ -1,6 +1,6 @@
 /**
- * Generates 10 unique WebP images for catalog directions.
- * Run: node scripts/generate-direction-images.mjs
+ * @deprecated Use photorealistic sources in scripts/direction-photos/ + convert-direction-photos.mjs
+ * Legacy SVG generator kept for fallback. Prefer: node scripts/convert-direction-photos.mjs
  */
 import { mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
