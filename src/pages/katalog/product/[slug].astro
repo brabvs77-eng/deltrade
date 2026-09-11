@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Button from '../../../components/ui/Button.astro';
+import ProductImage from '../../../components/ui/ProductImage.astro';
 import { getAllProducts, getSectionTitle, getSubsectionTitle } from '../../../lib/catalog';
+import { getProductImage } from '../../../lib/images';
 import { breadcrumbSchema } from '../../../lib/seo/schema';
 import { SITE } from '../../../lib/constants';
 
@@ -18,11 +20,14 @@ const subsectionTitle = getSubsectionTitle(product.section, product.subsection);
 const pricePerKg = (product.pricePerTon / 1000).toFixed(0);
 const paragraphs = product.description.split('\n\n');
 
+const productImage = `${SITE.url}${getProductImage(product.subsection)}`;
+
 const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: product.title,
   description: product.description.replace(/\n/g, ' '),
+  image: productImage,
   brand: { '@type': 'Brand', name: 'DELDIN TRADE' },
   sku: product.slug,
   offers: {
@@ -72,13 +77,10 @@ const breadcrumbs = breadcrumbSchema([
       </nav>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        <!-- Image placeholder -->
-        <div class="aspect-[4/3] rounded-xl diamond-plate flex items-center justify-center relative overflow-hidden">
-          <div class="absolute inset-0 metal-surface-dark opacity-80"></div>
-          <div class="relative text-center p-8">
-            <p class="text-steel-400 text-xs uppercase tracking-[0.3em] mb-2">DELDIN TRADE</p>
-            <p class="text-white text-xl sm:text-2xl font-bold">{product.h1}</p>
-            <p class="text-steel-500 mt-2 text-sm">{product.gost}</p>
+        <div class="aspect-[4/3] rounded-xl overflow-hidden metal-border relative">
+          <ProductImage subsection={product.subsection} title={product.title} />
+          <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-steel-900/80 to-transparent p-4">
+            <p class="text-white text-sm font-medium">{product.gost}</p>
           </div>
         </div>
 

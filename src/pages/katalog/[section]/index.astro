@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import SectionHeading from '../../../components/ui/SectionHeading.astro';
 import MetalCard from '../../../components/ui/MetalCard.astro';
+import ProductImage from '../../../components/ui/ProductImage.astro';
 import {
   getProductsBySection,
   getSectionTitle,
@@ -63,8 +64,8 @@ const breadcrumbs = breadcrumbSchema([
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {products.map((product) => (
                 <MetalCard href={`/katalog/product/${product.slug}/`}>
-                  <div class="aspect-[4/3] rounded-lg metal-surface-dark mb-4 flex items-center justify-center overflow-hidden">
-                    <span class="text-steel-500 text-xs uppercase tracking-widest">{product.steelGrade}</span>
+                  <div class="aspect-[4/3] rounded-lg overflow-hidden mb-4 metal-border">
+                    <ProductImage subsection={product.subsection} title={product.title} thumb />
                   </div>
                   <h2 class="font-bold text-steel-900 group-hover:text-brand transition-colors">
                     {product.title}

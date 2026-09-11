@@ -13,7 +13,7 @@ export function buildMeta({
   title,
   description = SITE.description,
   path = '',
-  image = '/images/og-default.jpg',
+  image = '/images/og-default.webp',
   noindex = false,
 }: PageMeta = {}): MetaDescriptor[] {
   const pageTitle = title ? `${title} | ${SITE.name}` : SITE.title;

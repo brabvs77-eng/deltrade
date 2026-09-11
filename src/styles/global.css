@@ -198,6 +198,18 @@
   @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
 }
 
+/* ── Enhanced CTA buttons ── */
+.btn-brand-glow {
+  background: linear-gradient(180deg, #1a5c3d 0%, #14452f 50%, #0d2e1f 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.15) inset,
+    0 4px 12px rgba(20, 69, 47, 0.35);
+}
+
+.btn-brand-glow:hover {
+  background: linear-gradient(180deg, #20704a 0%, #1a5c3d 50%, #14452f 100%);
+}
+
 /* ── Sticky mobile CTA offset ── */
 .has-mobile-cta {
   padding-bottom: 4.5rem;

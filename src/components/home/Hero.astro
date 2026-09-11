@@ -1,15 +1,27 @@
 ---
 import Button from '../ui/Button.astro';
+import { HERO_BG } from '../../lib/images';
 ---
 
 <section class="relative overflow-hidden steel-section">
-  <!-- Diamond plate overlay -->
-  <div class="absolute inset-0 diamond-plate opacity-40" aria-hidden="true"></div>
+  <!-- Hero background photo -->
+  <img
+    src={HERO_BG}
+    alt=""
+    role="presentation"
+    width={1920}
+    height={1080}
+    class="absolute inset-0 w-full h-full object-cover object-center"
+    loading="eager"
+    fetchpriority="high"
+    decoding="async"
+  />
 
-  <!-- Metallic shine accent -->
-  <div class="absolute top-0 right-0 w-1/2 h-full opacity-10" aria-hidden="true"
-    style="background: linear-gradient(135deg, transparent 40%, rgba(200,205,211,0.3) 50%, transparent 60%);"
-  ></div>
+  <!-- Dark overlay for text readability -->
+  <div class="absolute inset-0 bg-gradient-to-r from-steel-900/95 via-steel-900/85 to-steel-900/60" aria-hidden="true"></div>
+
+  <!-- Diamond plate overlay -->
+  <div class="absolute inset-0 diamond-plate opacity-20" aria-hidden="true"></div>
 
   <div class="section-container relative py-16 sm:py-20 lg:py-28">
     <div class="max-w-3xl">

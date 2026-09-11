@@ -1,0 +1,24 @@
+---
+import { getProductImage, getProductImageAlt } from '../../lib/images';
+
+interface Props {
+  subsection: string;
+  title: string;
+  thumb?: boolean;
+  class?: string;
+}
+
+const { subsection, title, thumb = false, class: className = '' } = Astro.props;
+const src = getProductImage(subsection, thumb);
+const alt = getProductImageAlt(title);
+---
+
+<img
+  src={src}
+  alt={alt}
+  width={thumb ? 400 : 800}
+  height={thumb ? 300 : 600}
+  loading="lazy"
+  decoding="async"
+  class={`w-full h-full object-cover ${className}`}
+/>

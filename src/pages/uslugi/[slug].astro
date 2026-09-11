@@ -2,7 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/ui/PageHero.astro';
 import Button from '../../components/ui/Button.astro';
+import ServiceImage from '../../components/ui/ServiceImage.astro';
 import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import { getServiceImage } from '../../lib/images';
 import { getAllServices } from '../../lib/services';
 import { breadcrumbSchema } from '../../lib/seo/schema';
 import { SITE } from '../../lib/constants';
@@ -21,6 +23,7 @@ const serviceSchema = {
   '@type': 'Service',
   name: service.title,
   description: service.description,
+  image: `${SITE.url}${getServiceImage(service.slug)}`,
   provider: { '@type': 'Organization', name: SITE.legalName, url: SITE.url },
 };
 
@@ -51,6 +54,9 @@ const breadcrumbs = breadcrumbSchema([
 
   <section class="py-10 sm:py-14">
     <div class="section-container max-w-3xl">
+      <div class="aspect-[16/10] rounded-xl overflow-hidden metal-border mb-8">
+        <ServiceImage slug={service.slug} title={service.title} />
+      </div>
       <p class="text-steel-600 leading-relaxed text-base sm:text-lg">{service.description}</p>
 
       <h2 class="mt-10 text-xl font-bold text-steel-900">Что входит в услугу</h2>

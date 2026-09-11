@@ -1,6 +1,7 @@
 ---
 import SectionHeading from '../ui/SectionHeading.astro';
 import MetalCard from '../ui/MetalCard.astro';
+import ServiceImage from '../ui/ServiceImage.astro';
 
 const services = [
   {
@@ -36,7 +37,11 @@ const services = [
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
       {
         services.map((service) => (
-          <MetalCard href={`/uslugi/${service.slug}/`}>
+          <MetalCard href={`/uslugi/${service.slug}/`} class="!p-0 overflow-hidden">
+            <div class="aspect-[16/10] overflow-hidden">
+              <ServiceImage slug={service.slug} title={service.title} class="group-hover:scale-105 transition-transform duration-300" />
+            </div>
+            <div class="p-5 sm:p-6">
             <h3 class="font-bold text-steel-900 group-hover:text-brand transition-colors text-lg">
               {service.title}
             </h3>
@@ -47,6 +52,7 @@ const services = [
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
               </svg>
             </span>
+            </div>
           </MetalCard>
         ))
       }

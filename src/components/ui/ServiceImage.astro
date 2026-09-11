@@ -1,0 +1,21 @@
+---
+import { getServiceImage } from '../../lib/images';
+
+interface Props {
+  slug: string;
+  title: string;
+  class?: string;
+}
+
+const { slug, title, class: className = '' } = Astro.props;
+---
+
+<img
+  src={getServiceImage(slug)}
+  alt={`${title} — услуга DELDIN TRADE`}
+  width={800}
+  height={600}
+  loading="lazy"
+  decoding="async"
+  class={`w-full h-full object-cover ${className}`}
+/>
