@@ -1,0 +1,44 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import Button from '../ui/Button.astro';
+import PostCard from '../blog/PostCard.astro';
+import { getPriorityPosts, getAllPosts, BLOG_CATEGORIES } from '../../lib/blog';
+
+const priority = await getPriorityPosts();
+const all = await getAllPosts();
+const posts = (priority.length >= 3 ? priority : all).slice(0, 3);
+---
+
+{
+  posts.length > 0 && (
+    <section class="py-14 sm:py-20 bg-white">
+      <div class="section-container">
+        <SectionHeading
+          title="Блог о снабжении"
+          subtitle="Разбираем закупку глазами снабженца: какие данные собрать, что проверить в предложении и как довести заявку до поставки"
+        />
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {posts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-2">
+          {BLOG_CATEGORIES.map((cat) => (
+            <a
+              href={`/blog/rubrika/${cat.slug}/`}
+              class="px-3 py-1.5 rounded-lg metal-border bg-surface text-xs sm:text-sm text-steel-600 hover:text-brand transition-colors"
+            >
+              {cat.shortTitle}
+            </a>
+          ))}
+        </div>
+
+        <div class="mt-8 text-center">
+          <Button href="/blog/" variant="outline">Все статьи блога</Button>
+        </div>
+      </div>
+    </section>
+  )
+}
