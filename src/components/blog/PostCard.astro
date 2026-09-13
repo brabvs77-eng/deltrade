@@ -1,0 +1,58 @@
+---
+import MetalCard from '../ui/MetalCard.astro';
+import { getCategory, type BlogPost } from '../../lib/blog';
+
+interface Props {
+  post: BlogPost;
+  showCategory?: boolean;
+  compact?: boolean;
+}
+
+const { post, showCategory = true, compact = false } = Astro.props;
+const category = getCategory(post.data.category);
+---
+
+<MetalCard href={`/blog/${post.id}/`}>
+  {
+    !compact && (
+      <div class="aspect-[16/10] rounded-lg overflow-hidden mb-4 metal-border">
+        <img
+          src={post.data.image}
+          alt={post.data.imageAlt}
+          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          loading="lazy"
+          decoding="async"
+          width="640"
+          height="400"
+        />
+      </div>
+    )
+  }
+
+  <div class="flex flex-wrap items-center gap-2 mb-3">
+    {
+      showCategory && (
+        <span class="px-2 py-0.5 rounded text-xs font-medium bg-brand/10 text-brand">
+          {category.shortTitle}
+        </span>
+      )
+    }
+    {
+      post.data.priority && (
+        <span class="px-2 py-0.5 rounded text-xs font-medium metal-surface metal-border text-steel-700">
+          Приоритет
+        </span>
+      )
+    }
+  </div>
+
+  <h2 class="text-base sm:text-lg font-bold text-steel-900 group-hover:text-brand transition-colors leading-snug">
+    {post.data.h1 ?? post.data.title}
+  </h2>
+
+  <p class="mt-2 text-sm text-steel-500 line-clamp-3">{post.data.description}</p>
+
+  <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-brand group-hover:gap-2 transition-all">
+    Читать <span aria-hidden="true">→</span>
+  </span>
+</MetalCard>

@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import { getAllPosts, getPriorityPosts, BLOG_CATEGORIES } from '../../lib/blog';
+import { breadcrumbSchema } from '../../lib/seo/schema';
+import { SITE } from '../../lib/constants';
+
+const posts = await getAllPosts();
+const priority = await getPriorityPosts();
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Блог', url: `${SITE.url}/blog/` },
+]);
+
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Блог DELDIN TRADE',
+  numberOfItems: posts.length,
+  itemListElement: posts.map((post, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: post.data.h1 ?? post.data.title,
+    url: `${SITE.url}/blog/${post.id}/`,
+  })),
+};
+---
+
+<BaseLayout
+  title="Блог о снабжении и комплектации"
+  description="Практические материалы для отделов снабжения: как подготовить спецификацию, согласовать аналог, проверить предложение поставщика и скомплектовать объект."
+  path="/blog/"
+  image="/images/blog/_og-blog.webp"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+  <script type="application/ld+json" set:html={JSON.stringify(itemList)} />
+
+  <PageHero
+    title="Блог о снабжении и комплектации"
+    subtitle="Материалы для тех, кто готовит и согласовывает реальную закупку: какие данные собрать, что проверить в предложении и как довести заявку до поставки"
+    breadcrumb={[{ label: 'Главная', href: '/' }, { label: 'Блог' }]}
+  />
+
+  <section class="py-8 sm:py-10 bg-white border-b border-steel-200">
+    <div class="section-container max-w-3xl">
+      <p class="text-steel-600 leading-relaxed">
+        Здесь мы разбираем закупку так, как её видит снабженец: какие исходные данные нужны
+        поставщику, чем отличаются похожие позиции, как оформить замену и что проверить до
+        отгрузки. В каждой статье — памятка или таблица, которую можно забрать в работу, и
+        понятный следующий шаг. Технические сведения сверяйте с проектом и актуальной
+        документацией производителя; сроки, наличие и условия мы подтверждаем по конкретной заявке.
+      </p>
+    </div>
+  </section>
+
+  <!-- Category navigation -->
+  <section class="py-8 sm:py-10">
+    <div class="section-container">
+      <h2 class="text-sm font-semibold uppercase tracking-wider text-steel-500 mb-4">
+        Разделы блога
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {
+          BLOG_CATEGORIES.map((cat) => (
+            <a
+              href={`/blog/rubrika/${cat.slug}/`}
+              class="group rounded-xl metal-border bg-white p-4 transition-all hover:shadow-md hover:-translate-y-0.5"
+            >
+              <span class="text-xl text-brand" aria-hidden="true">{cat.icon}</span>
+              <h3 class="mt-2 font-semibold text-sm text-steel-900 group-hover:text-brand transition-colors">
+                {cat.title}
+              </h3>
+              <p class="mt-1 text-xs text-steel-500">
+                {posts.filter((p) => p.data.category === cat.slug).length} статей
+              </p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    priority.length > 0 && (
+      <section class="py-10 sm:py-14 bg-white border-y border-steel-200">
+        <div class="section-container">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="rivet shrink-0" aria-hidden="true" />
+            <div class="h-px flex-1 max-w-16 bg-steel-300" aria-hidden="true" />
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-steel-900">С чего начать</h2>
+          <p class="mt-3 mb-8 text-steel-500 max-w-2xl">
+            Десять материалов, которые закрывают самые частые вопросы снабжения — от короткого
+            отрезка трубы до многопозиционной заявки на объект.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {priority.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- All posts grouped by category -->
+  {
+    BLOG_CATEGORIES.map((cat) => {
+      const catPosts = posts.filter((p) => p.data.category === cat.slug);
+      if (catPosts.length === 0) return null;
+      return (
+        <section class="py-10 sm:py-14 border-b border-steel-200 last:border-b-0">
+          <div class="section-container">
+            <div class="flex flex-wrap items-end justify-between gap-3 mb-2">
+              <h2 class="text-xl sm:text-2xl font-bold text-steel-900" id={cat.slug}>
+                {cat.title}
+              </h2>
+              <a
+                href={`/blog/rubrika/${cat.slug}/`}
+                class="text-sm font-medium text-brand hover:underline"
+              >
+                Все материалы раздела →
+              </a>
+            </div>
+            <p class="text-steel-500 mb-8 max-w-2xl text-sm sm:text-base">{cat.description}</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {catPosts.map((post) => (
+                <PostCard post={post} showCategory={false} />
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    })
+  }
+
+  <RequestFormBlock
+    title="Отправить спецификацию на расчёт"
+    subtitle="Пришлите перечень позиций, чертёж или фото шильдика — вернёмся с уточнениями и расчётом"
+  />
+</BaseLayout>

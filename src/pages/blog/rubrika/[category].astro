@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/ui/PageHero.astro';
+import PostCard from '../../../components/blog/PostCard.astro';
+import RequestFormBlock from '../../../components/ui/RequestFormBlock.astro';
+import { getAllPosts, BLOG_CATEGORIES, type BlogPost, type BlogCategory } from '../../../lib/blog';
+import { breadcrumbSchema } from '../../../lib/seo/schema';
+import { SITE } from '../../../lib/constants';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return BLOG_CATEGORIES.map((category) => ({
+    params: { category: category.slug },
+    props: {
+      category,
+      posts: posts.filter((p) => p.data.category === category.slug),
+    },
+  }));
+}
+
+interface Props {
+  category: BlogCategory;
+  posts: BlogPost[];
+}
+
+const { category, posts } = Astro.props;
+const otherCategories = BLOG_CATEGORIES.filter((c) => c.slug !== category.slug);
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Блог', url: `${SITE.url}/blog/` },
+  { name: category.title, url: `${SITE.url}/blog/rubrika/${category.slug}/` },
+]);
+---
+
+<BaseLayout
+  title={`${category.title} — статьи для снабжения`}
+  description={category.description}
+  path={`/blog/rubrika/${category.slug}/`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+
+  <PageHero
+    title={category.title}
+    subtitle={category.description}
+    breadcrumb={[
+      { label: 'Главная', href: '/' },
+      { label: 'Блог', href: '/blog/' },
+      { label: category.shortTitle },
+    ]}
+  />
+
+  <section class="py-10 sm:py-14">
+    <div class="section-container">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {posts.map((post) => <PostCard post={post} showCategory={false} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="py-10 sm:py-14 bg-white border-t border-steel-200">
+    <div class="section-container">
+      <h2 class="text-sm font-semibold uppercase tracking-wider text-steel-500 mb-4">
+        Другие разделы блога
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        {
+          otherCategories.map((cat) => (
+            <a
+              href={`/blog/rubrika/${cat.slug}/`}
+              class="px-4 py-2 rounded-lg metal-border bg-surface text-sm text-steel-700 hover:text-brand transition-colors"
+            >
+              {cat.title}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <RequestFormBlock title={`Заявка по теме «${category.shortTitle}»`} />
+</BaseLayout>

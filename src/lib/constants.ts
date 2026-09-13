@@ -34,6 +34,7 @@ export const NAV_LINKS = [
   { href: '/otrasli/', label: 'Отрасли' },
   { href: '/kalkulyator-metalla/', label: 'Калькулятор' },
   { href: '/keisy/', label: 'Кейсы' },
+  { href: '/blog/', label: 'Блог' },
   { href: '/dokumenty/', label: 'Документы' },
   { href: '/geografiya/', label: 'География' },
   { href: '/o-kompanii/', label: 'О компании' },

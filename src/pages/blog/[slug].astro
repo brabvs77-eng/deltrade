@@ -1,0 +1,246 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import Button from '../../components/ui/Button.astro';
+import RequestFormBlock from '../../components/ui/RequestFormBlock.astro';
+import {
+  getAllPosts,
+  getRelatedPosts,
+  getCategory,
+  readingTime,
+  type BlogPost,
+} from '../../lib/blog';
+import { breadcrumbSchema } from '../../lib/seo/schema';
+import { SITE } from '../../lib/constants';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+const category = getCategory(post.data.category);
+const related = await getRelatedPosts(post, 3);
+const minutes = readingTime(post.body ?? '');
+const url = `${SITE.url}/blog/${post.id}/`;
+
+const toc = headings.filter((h) => h.depth === 2);
+
+const breadcrumbs = breadcrumbSchema([
+  { name: 'Главная', url: SITE.url },
+  { name: 'Блог', url: `${SITE.url}/blog/` },
+  { name: category.title, url: `${SITE.url}/blog/rubrika/${category.slug}/` },
+  { name: post.data.h1 ?? post.data.title, url },
+]);
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.data.h1 ?? post.data.title,
+  description: post.data.description,
+  image: `${SITE.url}${post.data.image}`,
+  datePublished: post.data.publishDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.publishDate).toISOString(),
+  author: { '@type': 'Organization', name: SITE.legalName, url: SITE.url },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.legalName,
+    logo: { '@type': 'ImageObject', url: `${SITE.url}/images/logo-color.png` },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  articleSection: category.title,
+  inLanguage: 'ru-RU',
+};
+
+const faqSchema =
+  post.data.faq.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: post.data.faq.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: { '@type': 'Answer', text: item.answer },
+        })),
+      }
+    : null;
+
+const publishedLabel = post.data.publishDate.toLocaleDateString('ru-RU', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  path={`/blog/${post.id}/`}
+  image={post.data.image}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+
+  <PageHero
+    title={post.data.h1 ?? post.data.title}
+    breadcrumb={[
+      { label: 'Главная', href: '/' },
+      { label: 'Блог', href: '/blog/' },
+      { label: category.shortTitle, href: `/blog/rubrika/${category.slug}/` },
+    ]}
+  />
+
+  <article class="py-10 sm:py-14">
+    <div class="section-container max-w-3xl">
+      <!-- Meta line -->
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-steel-500 mb-6">
+        <a
+          href={`/blog/rubrika/${category.slug}/`}
+          class="px-2 py-0.5 rounded text-xs font-medium bg-brand/10 text-brand hover:bg-brand/20 transition-colors"
+        >
+          {category.shortTitle}
+        </a>
+        <time datetime={post.data.publishDate.toISOString()}>{publishedLabel}</time>
+        <span aria-hidden="true">·</span>
+        <span>{minutes} мин чтения</span>
+      </div>
+
+      <!-- Hero image -->
+      <div class="aspect-[16/9] rounded-xl overflow-hidden metal-border mb-8">
+        <img
+          src={post.data.image}
+          alt={post.data.imageAlt}
+          class="w-full h-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+          width="1200"
+          height="675"
+        />
+      </div>
+
+      <!-- Lead -->
+      <p class="text-lg text-steel-600 leading-relaxed mb-8 pb-8 border-b border-steel-200">
+        {post.data.description}
+      </p>
+
+      <!-- Table of contents -->
+      {
+        toc.length > 2 && (
+          <nav
+            class="rounded-xl metal-border bg-white p-5 mb-10"
+            aria-label="Содержание статьи"
+          >
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-steel-500 mb-3">
+              Содержание
+            </h2>
+            <ol class="space-y-2 text-sm">
+              {toc.map((heading, i) => (
+                <li class="flex gap-3">
+                  <span class="text-steel-400 tabular-nums shrink-0">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <a href={`#${heading.slug}`} class="text-steel-700 hover:text-brand transition-colors">
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+
+      <div class="article-prose">
+        <Content />
+      </div>
+
+      <!-- FAQ -->
+      {
+        post.data.faq.length > 0 && (
+          <section class="mt-12">
+            <h2 class="text-xl sm:text-2xl font-bold text-steel-900 mb-5">Частые вопросы</h2>
+            <div class="space-y-3">
+              {post.data.faq.map((item) => (
+                <details class="group rounded-xl metal-border bg-white overflow-hidden">
+                  <summary class="cursor-pointer list-none px-5 py-4 font-semibold text-steel-900 flex items-start justify-between gap-4 hover:text-brand transition-colors">
+                    <span>{item.question}</span>
+                    <span
+                      class="text-brand shrink-0 transition-transform group-open:rotate-45 text-xl leading-none"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <div class="px-5 pb-5 text-steel-600 leading-relaxed border-t border-steel-200 pt-4">
+                    {item.answer}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Next step CTA -->
+      <section class="mt-12 rounded-2xl steel-section metal-border-dark p-6 sm:p-8 relative overflow-hidden">
+        <div class="absolute top-3 left-3 rivet opacity-70" aria-hidden="true"></div>
+        <div class="absolute top-3 right-3 rivet opacity-70" aria-hidden="true"></div>
+        <h2 class="text-xl sm:text-2xl font-bold text-white">Следующий шаг</h2>
+        <p class="mt-3 text-steel-300 leading-relaxed">{post.data.targetRequest}</p>
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
+          <Button href="/#zayavka" variant="primary" size="md">Отправить заявку</Button>
+          <Button href="/kontakty/" variant="metal" size="md">Связаться с менеджером</Button>
+        </div>
+      </section>
+
+      <!-- Catalog links -->
+      {
+        post.data.catalogLinks.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-steel-500 mb-4">
+              Смотрите в каталоге
+            </h2>
+            <div class="flex flex-wrap gap-2">
+              {post.data.catalogLinks.map((link) => (
+                <a
+                  href={link.href}
+                  class="px-4 py-2 rounded-lg metal-border bg-white text-sm text-steel-700 hover:text-brand transition-colors"
+                >
+                  {link.title}
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="py-10 sm:py-14 bg-white border-t border-steel-200">
+        <div class="section-container">
+          <h2 class="text-xl sm:text-2xl font-bold text-steel-900 mb-6">Читайте также</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {related.map((item) => (
+              <PostCard post={item} compact />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <RequestFormBlock title="Отправить заявку на расчёт" subtitle={post.data.targetRequest} />
+</BaseLayout>
