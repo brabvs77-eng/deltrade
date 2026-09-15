@@ -9,11 +9,19 @@ const SUBSECTION_IMAGES: Record<string, string> = {
   krug: '/images/products/krug.webp',
   polosa: '/images/products/polosa.webp',
   shestigrannik: '/images/products/shestigrannik.webp',
+  'kanalizaciya-sml': '/images/blog/komplektaciya-kanalizacii-sml.webp',
 };
 
 const SERVICE_IMAGES: Record<string, string> = {
-  metalloobrabotka: '/images/services/metalloobrabotka.webp',
+  'izgotovlenie-zagotovok': '/images/services/izgotovlenie-po-chertezham.webp',
+  'rezka-metalla': '/images/services/metalloobrabotka.webp',
+  'gibka-lista': '/images/services/metalloobrabotka.webp',
+  cinkovanie: '/images/services/metalloobrabotka.webp',
+  'svarka-i-metallokonstrukcii': '/images/services/izgotovlenie-po-chertezham.webp',
   'izgotovlenie-po-chertezham': '/images/services/izgotovlenie-po-chertezham.webp',
+  'tokarnye-frezernye': '/images/services/metalloobrabotka.webp',
+  pokraska: '/images/services/metalloobrabotka.webp',
+  metalloobrabotka: '/images/services/metalloobrabotka.webp',
   komplektaciya: '/images/services/komplektaciya.webp',
   logistika: '/images/services/logistika.webp',
 };

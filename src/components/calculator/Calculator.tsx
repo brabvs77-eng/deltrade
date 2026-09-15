@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CalcMode, Metal, Profile, SpecItem } from '../../lib/calculator/types';
-import { calculate } from '../../lib/calculator/calculate';
+import { calculate, calcWholeUnitVariants } from '../../lib/calculator/calculate';
+import type { WholeUnitVariant } from '../../lib/calculator/types';
 import {
   createSpecItem,
   exportSpecCSV,
@@ -63,6 +64,7 @@ export default function Calculator() {
   const [pricePerKg, setPricePerKg] = useState<number | ''>('');
   const [mode, setMode] = useState<CalcMode>('weight');
   const [targetWeight, setTargetWeight] = useState(1000);
+  const [barLengthM, setBarLengthM] = useState(6);
   const [spec, setSpec] = useState<SpecItem[]>([]);
   const [dims, setDims] = useState<Record<string, number>>({});
   const [copyStatus, setCopyStatus] = useState('');
@@ -195,6 +197,45 @@ export default function Calculator() {
 
   const totals = specTotals(spec);
 
+  const wholeUnitVariants = useMemo((): WholeUnitVariant[] => {
+    if (mode === 'weight') return [];
+    return calcWholeUnitVariants(
+      {
+        profileId,
+        metalId,
+        customDensity,
+        dimensions,
+        quantity,
+        pricePerKg: pricePerKg === '' ? defaultPrice : pricePerKg,
+        mode,
+        targetWeight,
+      },
+      profile,
+      metal,
+      barLengthM,
+    );
+  }, [
+    mode,
+    profileId,
+    metalId,
+    customDensity,
+    dimensions,
+    quantity,
+    pricePerKg,
+    defaultPrice,
+    targetWeight,
+    barLengthM,
+    profile,
+    metal,
+  ]);
+
+  const applyVariant = (variant: WholeUnitVariant) => {
+    setQuantity(variant.quantity);
+    const lengthField = profile.fields.find((f) => f.isLength);
+    if (lengthField) setDim(lengthField.key, barLengthM);
+    setMode('weight');
+  };
+
   const inputClass =
     'w-full px-3 py-2.5 rounded-lg border border-steel-300 bg-surface text-steel-900 text-base min-h-[44px] focus:outline-2 focus:outline-brand focus:border-brand';
 
@@ -220,16 +261,29 @@ export default function Calculator() {
           ))}
         </div>
         {mode !== 'weight' && (
-          <div className="mt-3 max-w-xs">
-            <label className="block text-sm font-medium text-steel-600 mb-1">Целевой вес, кг</label>
-            <input
-              type="number"
-              min={0.001}
-              step="any"
-              value={targetWeight}
-              onChange={(e) => setTargetWeight(Number(e.target.value))}
-              className={inputClass}
-            />
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg">
+            <div>
+              <label className="block text-sm font-medium text-steel-600 mb-1">Целевой вес, кг</label>
+              <input
+                type="number"
+                min={0.001}
+                step="any"
+                value={targetWeight}
+                onChange={(e) => setTargetWeight(Number(e.target.value))}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-steel-600 mb-1">Длина хлыста, м</label>
+              <input
+                type="number"
+                min={0.1}
+                step="any"
+                value={barLengthM}
+                onChange={(e) => setBarLengthM(Number(e.target.value))}
+                className={inputClass}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -406,6 +460,59 @@ export default function Calculator() {
           </button>
         </div>
       </div>
+
+      {wholeUnitVariants.length > 0 && (
+        <div className="rounded-xl border border-steel-300 bg-white overflow-hidden">
+          <div className="metal-surface px-4 py-2.5 border-b border-steel-300">
+            <span className="text-sm font-semibold text-steel-700">
+              Варианты целого количества (хлыст {barLengthM} м)
+            </span>
+            <p className="text-xs text-steel-500 mt-0.5">
+              Теоретический вес. Нестандартная резка и продажа остатка — по согласованию с менеджером.
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-steel-50 text-steel-600 text-left">
+                  <th className="px-4 py-2">Вариант</th>
+                  <th className="px-4 py-2 text-right">Кол-во, шт</th>
+                  <th className="px-4 py-2 text-right">Метраж, м</th>
+                  <th className="px-4 py-2 text-right">Вес, кг</th>
+                  <th className="px-4 py-2 text-right">Отклонение, м</th>
+                  <th className="px-4 py-2 text-right">Ориентир, ₽</th>
+                  <th className="px-4 py-2"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {wholeUnitVariants.map((v) => (
+                  <tr key={`${v.quantity}-${v.label}`} className="border-t border-steel-200">
+                    <td className="px-4 py-2 font-medium capitalize">{v.label}</td>
+                    <td className="px-4 py-2 text-right">{v.quantity}</td>
+                    <td className="px-4 py-2 text-right">{v.totalLengthM}</td>
+                    <td className="px-4 py-2 text-right">{v.totalWeight}</td>
+                    <td className="px-4 py-2 text-right text-steel-500">
+                      {v.deviationM > 0 ? '+' : ''}{v.deviationM}
+                    </td>
+                    <td className="px-4 py-2 text-right font-medium text-brand">
+                      {v.estimatedCost?.toLocaleString('ru-RU') ?? '—'}
+                    </td>
+                    <td className="px-4 py-2 text-right">
+                      <button
+                        type="button"
+                        onClick={() => applyVariant(v)}
+                        className="text-brand hover:underline text-xs font-medium"
+                      >
+                        Выбрать
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Specification table */}
       {spec.length > 0 && (

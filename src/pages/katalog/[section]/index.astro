@@ -1,16 +1,17 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import SectionHeading from '../../../components/ui/SectionHeading.astro';
-import MetalCard from '../../../components/ui/MetalCard.astro';
-import ProductImage from '../../../components/ui/ProductImage.astro';
+import CatalogTable from '../../../components/catalog/CatalogTable';
 import {
   getProductsBySection,
   getSectionTitle,
   getSectionContent,
+  sortProductsBySubsection,
+  formatProductPrice,
+  getSubsectionTitle,
   SUBSECTIONS,
 } from '../../../lib/catalog';
 import { breadcrumbSchema } from '../../../lib/seo/schema';
-import { SITE } from '../../../lib/constants';
+import { PRICE_DISCLAIMER, SITE } from '../../../lib/constants';
 
 export function getStaticPaths() {
   const sections = ['metalloprokat', 'specialnye-stali', 'metallokonstrukcii', 'inzhenernye-sistemy', 'kanalizaciya', 'tehnicheskaya-izolyaciya', 'elektrotehnika', 'fasady-i-krovlya', 'zashchita-ot-bpla', 'kompleksnaya-komplektaciya'];
@@ -18,10 +19,32 @@ export function getStaticPaths() {
 }
 
 const { section } = Astro.params;
-const products = getProductsBySection(section!);
+const rawProducts = sortProductsBySubsection(getProductsBySection(section!), section!);
 const title = getSectionTitle(section!);
 const subsections = SUBSECTIONS[section!] ?? [];
 const sectionContent = getSectionContent(section!);
+
+const tableProducts = rawProducts.map((p) => {
+  const price = formatProductPrice(p);
+  return {
+    slug: p.slug,
+    title: p.title,
+    gost: p.gost,
+    steelGrade: p.steelGrade,
+    diameter: p.diameter,
+    weightPerMeter: p.weightPerMeter,
+    priceValue: price.value,
+    priceUnit: price.unit,
+    subsection: p.subsection,
+    subsectionTitle: getSubsectionTitle(section!, p.subsection),
+  };
+});
+
+const subsectionCounts = subsections.map((sub) => ({
+  slug: sub.slug,
+  title: sub.title,
+  count: rawProducts.filter((p) => p.subsection === sub.slug).length,
+}));
 
 const breadcrumbs = breadcrumbSchema([
   { name: 'Главная', url: SITE.url },
@@ -32,7 +55,7 @@ const breadcrumbs = breadcrumbSchema([
 
 <BaseLayout
   title={title}
-  description={`${title} — поставка по спецификации. DELDIN TRADE: комплексные поставки металлопроката с доставкой по России.`}
+  description={`${title} — поставка по спецификации. DELDIN TRADE: комплексные поставки с доставкой по России.`}
   path={`/katalog/${section}/`}
 >
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbs)} />
@@ -45,6 +68,7 @@ const breadcrumbs = breadcrumbSchema([
         <span class="text-steel-300">{title}</span>
       </nav>
       <h1 class="text-2xl sm:text-3xl font-extrabold text-white">{title}</h1>
+      <p class="mt-2 text-sm text-steel-400">{PRICE_DISCLAIMER}</p>
     </div>
   </section>
 
@@ -53,9 +77,6 @@ const breadcrumbs = breadcrumbSchema([
       <section class="py-8 sm:py-10 bg-white border-b border-steel-200">
         <div class="section-container max-w-3xl">
           <p class="text-steel-600 leading-relaxed">{sectionContent.intro}</p>
-          <p class="mt-4 text-sm text-steel-500 leading-relaxed">
-            <span class="font-semibold text-steel-700">Анализ рынка:</span> {sectionContent.competitorNotes}
-          </p>
         </div>
       </section>
     )
@@ -64,41 +85,13 @@ const breadcrumbs = breadcrumbSchema([
   <section class="py-10 sm:py-14">
     <div class="section-container">
       {
-        products.length > 0 ? (
-          <>
-            {subsections.length > 0 && (
-              <div class="flex flex-wrap gap-2 mb-8">
-                {subsections.map((sub) => (
-                  <span class="px-3 py-1.5 rounded-full text-sm metal-border bg-white text-steel-600">
-                    {sub.title} ({products.filter((p) => p.subsection === sub.slug).length})
-                  </span>
-                ))}
-              </div>
-            )}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {products.map((product) => (
-                <MetalCard href={`/katalog/product/${product.slug}/`}>
-                  <div class="aspect-[4/3] rounded-lg overflow-hidden mb-4 metal-border">
-                    <ProductImage slug={product.slug} subsection={product.subsection} title={product.title} thumb />
-                  </div>
-                  <h2 class="font-bold text-steel-900 group-hover:text-brand transition-colors">
-                    {product.title}
-                  </h2>
-                  <p class="mt-1 text-xs text-steel-400">{product.gost}</p>
-                  <div class="mt-3 flex justify-between items-center text-sm">
-                    <span class="text-steel-500">{product.weightPerMeter > 0 ? `${product.weightPerMeter} кг/м` : 'по спецификации'}</span>
-                    <span class="font-semibold text-brand">
-                      {product.pricePerUnit
-                        ? `от ${product.pricePerUnit} ₽`
-                        : product.pricePerTon > 0
-                          ? `от ${(product.pricePerTon / 1000).toFixed(0)} ₽/кг`
-                          : 'по запросу'}
-                    </span>
-                  </div>
-                </MetalCard>
-              ))}
-            </div>
-          </>
+        rawProducts.length > 0 ? (
+          <CatalogTable
+            client:load
+            products={tableProducts}
+            subsections={subsectionCounts.filter((s) => s.count > 0)}
+            section={section!}
+          />
         ) : (
           <div class="text-center py-16 rounded-xl metal-border bg-white">
             <p class="text-steel-500 mb-4">Позиции этого раздела добавляются. Отправьте спецификацию — подберём под вашу задачу.</p>

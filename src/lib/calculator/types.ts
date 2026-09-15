@@ -45,6 +45,15 @@ export interface CalcResult {
   error?: string;
 }
 
+export interface WholeUnitVariant {
+  quantity: number;
+  totalLengthM: number;
+  totalWeight: number;
+  deviationM: number;
+  estimatedCost: number | null;
+  label: 'ниже' | 'выше' | 'точно';
+}
+
 export interface SpecItem {
   id: string;
   profileName: string;
