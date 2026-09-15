@@ -5488,5 +5488,175 @@
       "komplekt-karkas-sklad",
       "komplekt-krovlya-fasad"
     ]
+  },
+  {
+    "slug": "sml-truba-110",
+    "section": "inzhenernye-sistemy",
+    "subsection": "kanalizaciya-sml",
+    "title": "Труба SML DN110",
+    "h1": "Труба чугунная безраструбная SML DN110",
+    "gost": "EN 877 / DIN 19522",
+    "steelGrade": "Чугун",
+    "diameter": 110,
+    "weightPerMeter": 15.8,
+    "pricePerTon": 0,
+    "pricePerUnit": 2850,
+    "description": "Труба безраструбная чугунная SML DN110 для внутренней канализации. Поставка по спецификации с сертификатами. Соединение хомутами из нержавеющей стали. Цена ориентировочная — уточняется при расчёте.",
+    "useCases": [
+      "внутренняя канализация",
+      "стояки",
+      "сборные стоки"
+    ],
+    "calculatorPreset": {
+      "profileId": "round",
+      "metalId": "st3",
+      "dimensions": {
+        "d": 110,
+        "l": 3
+      }
+    },
+    "faq": [
+      {
+        "question": "Какой стандарт у SML DN110?",
+        "answer": "EN 877, размерный ряд DIN 19522. При заказе предоставляем документы изготовителя."
+      }
+    ],
+    "relatedSlugs": [
+      "sml-truba-50",
+      "sml-homut-soedinitelnyy",
+      "sml-otvod-45-110"
+    ]
+  },
+  {
+    "slug": "sml-truba-50",
+    "section": "inzhenernye-sistemy",
+    "subsection": "kanalizaciya-sml",
+    "title": "Труба SML DN50",
+    "h1": "Труба чугунная безраструбная SML DN50",
+    "gost": "EN 877 / DIN 19522",
+    "steelGrade": "Чугун",
+    "diameter": 50,
+    "weightPerMeter": 5.2,
+    "pricePerTon": 0,
+    "pricePerUnit": 980,
+    "description": "Труба безраструбная чугунная SML DN50 для внутренней канализации. Поставка по спецификации с хомутами и фасонными частями.",
+    "useCases": [
+      "внутренняя канализация",
+      "отводы от сантехники"
+    ],
+    "calculatorPreset": {
+      "profileId": "round",
+      "metalId": "st3",
+      "dimensions": {
+        "d": 50,
+        "l": 3
+      }
+    },
+    "faq": [
+      {
+        "question": "Как заказать комплект SML?",
+        "answer": "Пришлите спецификацию — вернём расчёт с перечнем недостающих позиций (хомуты, крепления, ревизии)."
+      }
+    ],
+    "relatedSlugs": [
+      "sml-truba-110",
+      "sml-homut-soedinitelnyy",
+      "sml-reviziya-110"
+    ]
+  },
+  {
+    "slug": "sml-otvod-45-110",
+    "section": "inzhenernye-sistemy",
+    "subsection": "kanalizaciya-sml",
+    "title": "Отвод SML 45° DN110",
+    "h1": "Отвод чугунный SML 45° DN110",
+    "gost": "EN 877 / DIN 19522",
+    "steelGrade": "Чугун",
+    "diameter": 110,
+    "weightPerMeter": 0,
+    "pricePerTon": 0,
+    "pricePerUnit": 1650,
+    "description": "Фасонная часть SML — отвод 45° DN110. Указывайте угол и диаметр в заявке. Совместимость с хомутами — по каталогу изготовителя.",
+    "useCases": [
+      "повороты трассы",
+      "стояки",
+      "коллекторы"
+    ],
+    "calculatorPreset": {
+      "profileId": "round",
+      "metalId": "st3",
+      "dimensions": {
+        "d": 110,
+        "l": 1
+      }
+    },
+    "relatedSlugs": [
+      "sml-truba-110",
+      "sml-homut-soedinitelnyy",
+      "sml-reviziya-110"
+    ]
+  },
+  {
+    "slug": "sml-homut-soedinitelnyy",
+    "section": "inzhenernye-sistemy",
+    "subsection": "kanalizaciya-sml",
+    "title": "Хомут соединительный SML DN110",
+    "h1": "Хомут соединительный SML DN110",
+    "gost": "EN 877",
+    "steelGrade": "Нерж. сталь + EPDM",
+    "diameter": 110,
+    "weightPerMeter": 0,
+    "pricePerTon": 0,
+    "pricePerUnit": 420,
+    "description": "Соединительный хомут для безраструбной системы SML DN110. Количество определяется числом стыков в спецификации.",
+    "useCases": [
+      "соединение труб SML",
+      "монтаж стояков"
+    ],
+    "calculatorPreset": {
+      "profileId": "round",
+      "metalId": "st3",
+      "dimensions": {
+        "d": 110,
+        "l": 1
+      }
+    },
+    "relatedSlugs": [
+      "sml-truba-110",
+      "sml-otvod-45-110",
+      "sml-reviziya-110"
+    ]
+  },
+  {
+    "slug": "sml-reviziya-110",
+    "section": "inzhenernye-sistemy",
+    "subsection": "kanalizaciya-sml",
+    "title": "Ревизия SML DN110",
+    "h1": "Ревизия чугунная SML DN110",
+    "gost": "EN 877 / DIN 19522",
+    "steelGrade": "Чугун",
+    "diameter": 110,
+    "weightPerMeter": 0,
+    "pricePerTon": 0,
+    "pricePerUnit": 3200,
+    "description": "Ревизия для системы SML DN110. Указывайте тип и расположение по проекту.",
+    "useCases": [
+      "ревизионные узлы",
+      "стояки",
+      "сборные стоки"
+    ],
+    "calculatorPreset": {
+      "profileId": "round",
+      "metalId": "st3",
+      "dimensions": {
+        "d": 110,
+        "l": 1
+      }
+    },
+    "relatedSlugs": [
+      "sml-truba-110",
+      "sml-homut-soedinitelnyy",
+      "sml-otvod-45-110"
+    ]
   }
 ]

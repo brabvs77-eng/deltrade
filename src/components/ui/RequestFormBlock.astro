@@ -103,7 +103,9 @@ const { id = 'zayavka', title = 'Отправить заявку', subtitle = '�
     status.className = 'hidden';
 
     try {
-      const res = await fetch('/api/request', { method: 'POST', body: new FormData(form) });
+      const formData = new FormData(form);
+      formData.set('source', window.location.pathname || '/');
+      const res = await fetch('/api/request', { method: 'POST', body: formData });
       const data = await res.json();
 
       if (res.ok) {

@@ -41,6 +41,58 @@ export const NAV_LINKS = [
   { href: '/kontakty/', label: 'Контакты' },
 ] as const;
 
+/** Три стратегических направления по ТЗ (главная страница) */
+export const MAIN_DIRECTIONS = [
+  {
+    slug: 'metalloprokat',
+    title: 'Металлопрокат',
+    description:
+      'Чёрный, нержавеющий и цветной прокат: арматура, трубы, лист, профиль. Поставка по спецификации с сертификатами и ЭДО.',
+    href: '/katalog/metalloprokat/',
+    links: [
+      { label: 'Металлопрокат', href: '/katalog/metalloprokat/' },
+      { label: 'Спецстали', href: '/katalog/specialnye-stali/' },
+      { label: 'Фасады и кровля', href: '/katalog/fasady-i-krovlya/' },
+    ],
+  },
+  {
+    slug: 'inzhenernye-sistemy',
+    title: 'Инженерные системы',
+    description:
+      'Трубопроводная арматура, детали, канализация. Приоритет — безраструбная чугунная система SML по проекту.',
+    href: '/katalog/inzhenernye-sistemy/',
+    highlight: 'SML',
+    links: [
+      { label: 'Канализация SML', href: '/katalog/inzhenernye-sistemy/?subsection=kanalizaciya-sml' },
+      { label: 'Запорная арматура', href: '/katalog/inzhenernye-sistemy/?subsection=armatura-zapornaya' },
+      { label: 'Детали трубопроводов', href: '/katalog/inzhenernye-sistemy/?subsection=detali' },
+    ],
+  },
+  {
+    slug: 'metalloobrabotka',
+    title: 'Металлообработка и изготовление',
+    description:
+      'Резка, гибка, сварка и изготовление по чертежам. Работаем с материалом поставщика, давальческое сырьё не принимаем.',
+    href: '/uslugi/',
+    links: [
+      { label: 'Изготовление заготовок', href: '/uslugi/izgotovlenie-zagotovok/' },
+      { label: 'Резка металла', href: '/uslugi/rezka-metalla/' },
+      { label: 'По чертежам', href: '/uslugi/izgotovlenie-po-chertezham/' },
+    ],
+  },
+] as const;
+
+/** Порядок подгрупп инженерных систем по ТЗ */
+export const ENGINEERING_SUBSECTION_ORDER = [
+  'kanalizaciya-sml',
+  'armatura-zapornaya',
+  'detali',
+  'truby',
+] as const;
+
+export const PRICE_DISCLAIMER =
+  'Цены ориентировочные, обновляются два раза в месяц. Окончательная стоимость и наличие подтверждаются при расчёте.';
+
 export const CATALOG_DIRECTIONS = [
   {
     slug: 'metalloprokat',
